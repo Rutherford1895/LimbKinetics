@@ -1,25 +1,25 @@
 # Limb Movement Kinetics
 Mouse Lower limb movement's kinetics.
 
-##Introduction
+## Introduction
 
-This project is done on a request of my friend. The demand is to draw the kinetics graph of a mouse's limb's movement.  
+This project is done for a demand of my friend. The demand is to draw the kinetics graph of a mouse's limb's movement.  
 Beyond the demand, I also added a feature that can show the movement in animation. A set of **GUI-based** controllers are also added, to adjust the parameters.  
 Parameters used for different files can also be saved **respectively** for reuse.  
 I used **pandas** to process the data and **tkinter** for the visualization part, both based on Python 3.7.   
 
-##Scrennshot
+## Scrennshot
 
 **Main Interface**
 
 ![ScreenShot](./screenshots/screenshot_1.png)
 
-##Requirements
+## Requirements
 
 pandas  
 pickle
 
-##How to use
+## How to use
 ```
 python3 main.py
 ``` 
