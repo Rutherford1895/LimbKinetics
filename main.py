@@ -34,7 +34,8 @@ class Kinetics(Frame):
                            "offset_y": -150,
                            "sleep_time": 0,
                            "upward_start_frame": 405,
-                           "upward_end_frame": 430
+                           "upward_end_frame": 430,
+                           "threshold_on": 413
                            }
 
         self.filename = 'data1.csv'
@@ -145,6 +146,19 @@ class Kinetics(Frame):
                             command=self.set_upward_end_frame)
         self.spb8.pack(side=TOP)
 
+        self.lb9 = Label(self.fm_2, text='Threshold on:')
+        self.lb9.pack(side=TOP, anchor='w')
+
+        self.str9 = StringVar()
+        self.str9.set(self.parameters['threshold_on'])
+        self.spb9 = Spinbox(self.fm_2,
+                            from_=1,
+                            to=self.parameters['upper_frame_limit'],
+                            increment=1,
+                            textvariable=self.str9,
+                            command=self.set_threshold_on)
+        self.spb9.pack(side=TOP)
+
         self.chkvar1 = IntVar()
         self.chkvar1.set(1)
         self.chkbtn1 = Checkbutton(self.fm_2, text="Draw sticks", variable=self.chkvar1,
@@ -161,13 +175,22 @@ class Kinetics(Frame):
                                    )
         self.chkbtn2.pack(side=TOP, anchor='w')
 
+
         self.chkvar3 = IntVar()
         self.chkvar3.set(1)
-        self.chkbtn3 = Checkbutton(self.fm_2, text="Draw arrows", variable=self.chkvar3,
+        self.chkbtn3 = Checkbutton(self.fm_2, text="Draw a/v", variable=self.chkvar3,
                                    onvalue=1, offvalue=0,
                                    # height=5, width=20
                                    )
         self.chkbtn3.pack(side=TOP, anchor='w')
+
+        self.chkvar4 = IntVar()
+        self.chkvar4.set(1)
+        self.chkbtn4 = Checkbutton(self.fm_2, text="Draw toe end", variable=self.chkvar4,
+                                   onvalue=1, offvalue=0,
+                                   # height=5, width=20
+                                   )
+        self.chkbtn4.pack(side=TOP, anchor='w')
 
         self.fm_3 = Frame(self.fm_2)
         self.fm_3.pack(side=TOP)
@@ -252,6 +275,21 @@ class Kinetics(Frame):
         for i in range(len(self.time_frames)):
             t = self.time_frames[i]  # temporary variable, the current time frame
 
+            # Draw the threshold on time point
+
+            if i == self.parameters['threshold_on'] and self.chkvar3.get() == 1:
+                current_point = dict()
+                current_point['Y5'] = self.flip_x(self.transform(t.info['Y5']))
+                current_point['Z5'] = self.flip_y(self.transform(t.info['Z5']))
+                current_point['Y5v'] = t.info['Y5\'']
+                current_point['Z5v'] = t.info['Z5\'']
+                current_point['Y5a'] = t.info['Y5\'\'']
+                current_point['Z5a'] = t.info['Z5\'\'']
+                current_point['yz_combined_velocity'] = t.info['yz_combined_velocity']
+                current_point['yz_combined_acceleration'] = t.info['yz_combined_acceleration']
+                print('AAAA')
+                self.draw_velocity_acceleration(current_point)
+
             # Draw the sticks
             # 200 Hz -> lower frequency, but frequency gets higher in the upward part.
 
@@ -271,19 +309,6 @@ class Kinetics(Frame):
                         color=colors[drawing_counter % 7] if self.chkvar2.get() == 1 else 'grey40'
                     )
 
-                # Draw velocity and acceleration for every point
-                if self.chkvar3.get() == 1:  # Check if to draw the arrows
-                    current_point = {}
-                    current_point['Y5'] = self.flip_x(self.transform(t.info['Y5']))
-                    current_point['Z5'] = self.flip_y(self.transform(t.info['Z5']))
-                    current_point['Y5v'] = t.info['Y5\'']
-                    current_point['Z5v'] = t.info['Z5\'']
-                    current_point['Y5a'] = t.info['Y5\'\'']
-                    current_point['Z5a'] = t.info['Z5\'\'']
-                    current_point['yz_combined_velocity'] = t.info['yz_combined_velocity']
-                    current_point['yz_combined_acceleration'] = t.info['yz_combined_acceleration']
-                    self.draw_velocity_acceleration(current_point)
-
                 print("Time frame " + str(t.number) + " drawn.")
 
                 # Update frame counter, both int and str
@@ -294,14 +319,15 @@ class Kinetics(Frame):
 
                 time.sleep(self.parameters['sleep_time'])
 
-            # Draw the trajectory, or the trace
-            if int(self.parameters['start_frame']) <= i <= int(self.parameters['end_frame']):  # Apply to every time frame
+            # Draw the toe end, or the trace
+            if int(self.parameters['start_frame']) <= i <= int(self.parameters['end_frame']) and self.chkvar4.get() == 1:  # Apply to every time frame
                 if self.last_point != [0, 0]:  # When it's not the first frame
                     self.draw_trajectory(t)
                 self.last_point[0] = self.flip_x(self.transform(t.info['Y5']))
                 self.last_point[1] = self.flip_y(self.transform(t.info['Z5']))
         # Draw the last part to close the trajectory
-        self.draw_trajectory(t)
+        if self.chkvar4.get() == 1:
+            self.draw_trajectory(t)
 
         print(self.critical_point)
 
@@ -329,6 +355,9 @@ class Kinetics(Frame):
     def set_upward_end_frame(self):
         self.parameters['upward_end_frame'] = int(self.spb8.get())
 
+    def set_threshold_on(self):
+        self.parameters['threshold_on'] = int(self.spb9.get())
+
     def start_over(self):
         # manually update parameters
         self.set_start_frame()
@@ -339,6 +368,7 @@ class Kinetics(Frame):
         self.set_sleep_time()
         self.set_upward_start_frame()
         self.set_upward_end_frame()
+        self.set_threshold_on()
 
         self.canvas.delete('all')
         self.canvas.update()
@@ -359,6 +389,8 @@ class Kinetics(Frame):
             print("Parameters for",self.filename, "loaded.")
         except IOError:
             print("Cannot find saved parameters for", self.filename, ".")
+
+        # TODO refresh panel after reading parameters in.
 
     def load_file(self):
         new_filename = filedialog.askopenfilename()
@@ -386,6 +418,7 @@ class Kinetics(Frame):
     def draw_trajectory(self, t):
         # if self.last_point[1] < 596:  # self.flip_y(self.transform(t.info['Z5'])): # moving upward, set color to blue
         # in a frame range, set color to blue
+        '''
         if self.parameters['upward_end_frame'] > self.lb_frame_counter_int.get() > self.parameters['upward_start_frame']:
             c = colors[5]
             if self.critical_point == {}:  # record this point as the first point upward
@@ -401,7 +434,26 @@ class Kinetics(Frame):
 
                 if self.chkvar3.get() == 1:  # Check if to draw the arrows  # TODO check if this is needed to keep
                     self.draw_velocity_acceleration(self.critical_point)
-        else:  # not moving upward, set color
+        '''
+        if self.parameters['upward_end_frame'] > self.lb_frame_counter_int.get() > self.parameters['upward_start_frame']:
+            c = colors[5]
+            '''
+            if self.critical_point == {}:  # record this point as the first point upward
+                # cannot let self.critical_point = info, because '=' has a different meaning when used between dicts
+                self.critical_point['Y5'] = self.flip_x(self.transform(t.info['Y5']))
+                self.critical_point['Z5'] = self.flip_y(self.transform(t.info['Z5']))
+                self.critical_point['Y5v'] = t.info['Y5\'']
+                self.critical_point['Z5v'] = t.info['Z5\'']
+                self.critical_point['Y5a'] = t.info['Y5\'\'']
+                self.critical_point['Z5a'] = t.info['Z5\'\'']
+                self.critical_point['yz_combined_velocity'] = t.info['yz_combined_velocity']
+                self.critical_point['yz_combined_acceleration'] = t.info['yz_combined_acceleration']
+
+            #if self.chkvar3.get() == 1 and self.lb_frame_counter_int.get() == self.parameters['threshold_on']:  # Check if to draw the arrows  # TODO check if this is needed to keep
+                print("AAAAAAA")
+                self.draw_velocity_acceleration(self.critical_point)
+            '''
+        else:  # not moving upward, set color to grey
             c = 'grey40'
         self.canvas.create_line(self.last_point[0]+self.parameters['offset_x'],
                                 self.last_point[1]+self.parameters['offset_y'],
