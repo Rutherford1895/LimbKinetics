@@ -24,6 +24,7 @@ class Kinetics(Frame):
 
         # parameters
         self.parameters = {"upper_frame_limit": 5000,
+                           "lower_frame_limit": 0,
                            "scale_factor": 3,
                            "start_frame": 300,
                            "end_frame": 430,
@@ -178,11 +179,19 @@ class Kinetics(Frame):
 
         self.chkvar3 = IntVar()
         self.chkvar3.set(1)
-        self.chkbtn3 = Checkbutton(self.fm_2, text="Draw a/v", variable=self.chkvar3,
+        self.chkbtn3 = Checkbutton(self.fm_2, text="Draw Acceleration", variable=self.chkvar3,
                                    onvalue=1, offvalue=0,
                                    # height=5, width=20
                                    )
         self.chkbtn3.pack(side=TOP, anchor='w')
+
+        self.chkvar5 = IntVar()
+        self.chkvar5.set(1)
+        self.chkbtn5 = Checkbutton(self.fm_2, text="Draw Velocity", variable=self.chkvar5,
+                                   onvalue=1, offvalue=0,
+                                   # height=5, width=20
+                                   )
+        self.chkbtn5.pack(side=TOP, anchor='w')
 
         self.chkvar4 = IntVar()
         self.chkvar4.set(1)
@@ -191,6 +200,22 @@ class Kinetics(Frame):
                                    # height=5, width=20
                                    )
         self.chkbtn4.pack(side=TOP, anchor='w')
+
+        self.chkvar6 = IntVar()
+        self.chkvar6.set(0)
+        self.chkbtn6 = Checkbutton(self.fm_2, text="Draw from beginning", variable=self.chkvar6,
+                                   onvalue=1, offvalue=0,
+                                   # height=5, width=20
+                                   )
+        self.chkbtn6.pack(side=TOP, anchor='w')
+
+        self.chkvar7 = IntVar()
+        self.chkvar7.set(0)
+        self.chkbtn7 = Checkbutton(self.fm_2, text="Draw to ending", variable=self.chkvar7,
+                                   onvalue=1, offvalue=0,
+                                   # height=5, width=20
+                                   )
+        self.chkbtn7.pack(side=TOP, anchor='w')
 
         self.fm_3 = Frame(self.fm_2)
         self.fm_3.pack(side=TOP)
@@ -204,15 +229,28 @@ class Kinetics(Frame):
         '''
 
         # Bottom-up layout
+        self.btn5 = Button(self.fm_2, text='Resume', width=100, command=self.resume)
+        self.btn5.pack(side=BOTTOM)
+
+        self.btn4 = Button(self.fm_2, text='Pause', width=100, command=self.pause)
+        self.btn4.pack(side=BOTTOM)
+
         self.btn1 = Button(self.fm_2, text='Start over', width=100, command=self.start_over)
         self.btn1.pack(side=BOTTOM)
 
-        self.lb_frame_total_int = IntVar()
-        self.lb_frame_total_int.set(self.parameters['upper_frame_limit'])
-        self.lb_frame_total_str = StringVar()
-        self.lb_frame_total_str.set("Total frames: " + str(self.lb_frame_total_int.get()))
-        self.lb_frame_total = Label(self.fm_2, textvariable=self.lb_frame_total_str)
-        self.lb_frame_total.pack(side=BOTTOM)
+        self.lb_frame_upper_int = IntVar()
+        self.lb_frame_upper_int.set(self.parameters['upper_frame_limit'])
+        self.lb_frame_upper_str = StringVar()
+        self.lb_frame_upper_str.set("Frame to: " + str(self.lb_frame_upper_int.get()))
+        self.lb_frame_upper = Label(self.fm_2, textvariable=self.lb_frame_upper_str)
+        self.lb_frame_upper.pack(side=BOTTOM)
+
+        self.lb_frame_lower_int = IntVar()
+        self.lb_frame_lower_int.set(self.parameters['lower_frame_limit'])
+        self.lb_frame_lower_str = StringVar()
+        self.lb_frame_lower_str.set("Frame from: " + str(self.lb_frame_lower_int.get()))
+        self.lb_frame_lower = Label(self.fm_2, textvariable=self.lb_frame_lower_str)
+        self.lb_frame_lower.pack(side=BOTTOM)
 
         self.lb_frame_counter_int = IntVar()
         self.lb_frame_counter_int.set(0)
@@ -240,15 +278,17 @@ class Kinetics(Frame):
         self.csv_data = None
         self.read_in()
 
+        # pause and resume
+        self.drawing_counter = 0  # Counting time frames to determine the color in color mode
+        self.paused = 0
+        self.paused_at_frame = 0
+
     def read_in(self):
         self.time_frames = []
         try:
             f = open(self.filename+'.frames', "rb")
             self.time_frames = pickle.load(f)
             f.close()
-            self.upper_frame_limit = len(self.time_frames)
-            self.lb_frame_total_int.set(self.parameters['upper_frame_limit'])
-            self.lb_frame_total_str.set("Total frames: "+str(self.upper_frame_limit))
             print("Time frame data loaded.")
         except IOError:
             print("Time frame data file is not found. Generating...")
@@ -262,22 +302,30 @@ class Kinetics(Frame):
             pickle.dump(self.time_frames, f)
             f.close()
             print("Time frame data saved.")
-            self.parameters['upper_frame_limit'] = len(self.time_frames)
-            self.lb_frame_total_int.set(self.parameters['upper_frame_limit'])
-            self.lb_frame_total_str.set("Total frames: "+str(self.parameters['upper_frame_limit']))
-        self.load_parameters()
+        self.parameters['upper_frame_limit'] = int(self.time_frames[-1].info['Frame'])
+        self.parameters['lower_frame_limit'] = int(self.time_frames[0].info['Frame'])
+        self.lb_frame_upper_int.set(self.parameters['upper_frame_limit'])
+        self.lb_frame_upper_str.set("Frames to: "+str(self.parameters['upper_frame_limit']))
+        self.lb_frame_lower_int.set(self.parameters['lower_frame_limit'])
+        self.lb_frame_lower_str.set("Frames from: " + str(self.parameters['lower_frame_limit']))
+
+        # self.load_parameters()  # load other parameters
 
     def draw_all_time_frames(self):
         print("Start drawing time frames")
-        self.critical_point = {}  # the first point going upward
-        drawing_counter = 0  # Counting time frames to determine the color in color mode
+        self.critical_point = dict()  # the first point going upward
         self.last_point = [0, 0]  # Store the last point for drawing trajectory
-        for i in range(len(self.time_frames)):
-            t = self.time_frames[i]  # temporary variable, the current time frame
+        # for i in range(len(self.time_frames)):
+        for i in range(self.parameters['lower_frame_limit'], self.parameters['upper_frame_limit']):
+            print(i)
+            if self.paused == 1:  # exit when paused
+                return
+
+            t = self.time_frames[i - self.parameters['lower_frame_limit']]  # temporary variable, the current time frame
 
             # Draw the threshold on time point
 
-            if i == self.parameters['threshold_on'] and self.chkvar3.get() == 1:
+            if i == self.parameters['threshold_on']:
                 current_point = dict()
                 current_point['Y5'] = self.flip_x(self.transform(t.info['Y5']))
                 current_point['Z5'] = self.flip_y(self.transform(t.info['Z5']))
@@ -287,7 +335,7 @@ class Kinetics(Frame):
                 current_point['Z5a'] = t.info['Z5\'\'']
                 current_point['yz_combined_velocity'] = t.info['yz_combined_velocity']
                 current_point['yz_combined_acceleration'] = t.info['yz_combined_acceleration']
-                print('AAAA')
+                print('Draw V/A for this ''threshold on'' frame')
                 self.draw_velocity_acceleration(current_point)
 
             # Draw the sticks
@@ -299,28 +347,39 @@ class Kinetics(Frame):
             else:
                 real_time_skip_frame = self.parameters['skip_frame']
 
-            if i % real_time_skip_frame == 0 and int(self.parameters['start_frame']) <= i <= int(self.parameters['end_frame']):
+            if self.chkvar6.get() == 1:
+                starting = int(self.parameters['lower_frame_limit'])
+            else:
+                starting = int(self.parameters['start_frame'])
+
+            if self.chkvar7.get() == 1:
+                ending = int(self.parameters['upper_frame_limit'])
+            else:
+                ending = int(self.parameters['end_frame'])
+
+            if i % real_time_skip_frame == 0 and starting <= i <= ending:
                 if self.chkvar1.get() == 1:  # Check if to draw the sticks
                     self.draw_stick(
                         [t.info['Y1'], t.info['Z1'], t.info['Y2'], t.info['Z2'],
                          t.info['Y3'], t.info['Z3'], t.info['Y4'], t.info['Z4'],
                          t.info['Y5'], t.info['Z5']],
                         # color=colors[drawing_counter % 7] if self.chkvar2.get() == 1 else greys[drawing_counter % 10]
-                        color=colors[drawing_counter % 7] if self.chkvar2.get() == 1 else 'grey40'
+                        color=colors[self.drawing_counter % 7] if self.chkvar2.get() == 1 else 'grey40'
                     )
 
                 print("Time frame " + str(t.number) + " drawn.")
 
                 # Update frame counter, both int and str
-                self.lb_frame_counter_int.set(t.number)
-                self.lb_frame_counter_str.set("Frame "+str(t.number))
+                self.lb_frame_counter_int.set(str(t.info['Frame']))
+                self.lb_frame_counter_str.set("Frame "+str(t.info['Frame']))
 
-                drawing_counter += 1  # Counting time frames
+                self.drawing_counter += 1  # Counting time frames
+                self.paused_at_frame = i  # Store current frame number
 
                 time.sleep(self.parameters['sleep_time'])
 
             # Draw the toe end, or the trace
-            if int(self.parameters['start_frame']) <= i <= int(self.parameters['end_frame']) and self.chkvar4.get() == 1:  # Apply to every time frame
+            if starting <= i <= ending and self.chkvar4.get() == 1:  # Apply to every time frame
                 if self.last_point != [0, 0]:  # When it's not the first frame
                     self.draw_trajectory(t)
                 self.last_point[0] = self.flip_x(self.transform(t.info['Y5']))
@@ -359,6 +418,8 @@ class Kinetics(Frame):
         self.parameters['threshold_on'] = int(self.spb9.get())
 
     def start_over(self):
+        self.paused = 0  # clear the paused flag
+
         # manually update parameters
         self.set_start_frame()
         self.set_end_frame()
@@ -372,6 +433,24 @@ class Kinetics(Frame):
 
         self.canvas.delete('all')
         self.canvas.update()
+
+        self.draw_all_time_frames()
+
+    def pause(self):
+        self.paused = 1
+
+    def resume(self):
+        self.paused = 0  # clear the paused flag
+
+        self.parameters['start_frame'] = self.paused_at_frame
+        self.set_end_frame()
+        self.set_skip_frame()
+        self.set_offset_x()
+        self.set_offset_y()
+        self.set_sleep_time()
+        self.set_upward_start_frame()
+        self.set_upward_end_frame()
+        self.set_threshold_on()
 
         self.draw_all_time_frames()
 
@@ -402,16 +481,18 @@ class Kinetics(Frame):
 
     def draw_velocity_acceleration(self, p):
         # Draw velocity arrow
-        self.canvas.create_line(p['Y5']+self.parameters['offset_x'], p['Z5']+self.parameters['offset_y'],
-                                p['Y5']-p['Y5v']/self.parameters['velocity_normalization_factor']+self.parameters['offset_x'],
-                                p['Z5']-p['Z5v']/self.parameters['velocity_normalization_factor']+self.parameters['offset_y'],
-                                arrow=LAST, fill='black')
+        if self.chkvar3.get() == 1:
+            self.canvas.create_line(p['Y5']+self.parameters['offset_x'], p['Z5']+self.parameters['offset_y'],
+                                    p['Y5']-p['Y5v']/self.parameters['velocity_normalization_factor']+self.parameters['offset_x'],
+                                    p['Z5']-p['Z5v']/self.parameters['velocity_normalization_factor']+self.parameters['offset_y'],
+                                    arrow=LAST, fill='black')
 
         # Draw acceleration arrow
-        self.canvas.create_line(p['Y5']+self.parameters['offset_x'], p['Z5']+self.parameters['offset_y'],
-                                p['Y5']-p['Y5a']/self.parameters['acceleration_normalization_factor']+self.parameters['offset_x'],
-                                p['Z5']-p['Z5a']/self.parameters['acceleration_normalization_factor']+self.parameters['offset_y'],
-                                arrow=LAST, fill='red')
+        if self.chkvar5.get() == 1:
+            self.canvas.create_line(p['Y5']+self.parameters['offset_x'], p['Z5']+self.parameters['offset_y'],
+                                    p['Y5']-p['Y5a']/self.parameters['acceleration_normalization_factor']+self.parameters['offset_x'],
+                                    p['Z5']-p['Z5a']/self.parameters['acceleration_normalization_factor']+self.parameters['offset_y'],
+                                    arrow=LAST, fill='red')
 
         self.canvas.update()
 
@@ -517,7 +598,7 @@ class Kinetics(Frame):
         self.upper_frame_limit = self.csv_data.shape[0]
 
         for i in range(self.upper_frame_limit):
-            information = {}
+            information = dict()
             for title in column_titles:
                 information[title] = self.csv_data[title].tolist()[i]
             self.time_frames.append(TimeFrame(i, information))
@@ -538,8 +619,15 @@ class TimeFrame:
 if __name__ == '__main__':
     root = Tk()
     wid = 1000
-    hei = 800
+    hei = 900
     root.wm_title("Kinetics")
     root.geometry(str(wid) + "x" + str(hei) + "+200+50")
     app = Kinetics(root)
     root.mainloop()
+
+# ①帧数的起止，以实际帧数为准，比如有的CSV文件起始帧数并不是1，有可能是2000+。 (DONE)
+# ②抬起相的starting 和ending都有个开关，因为有时候我需要大致浏览一下总体的步态情况，然后再选择感兴趣的抬起相进行起止。 (DONE)
+# ③a和v是否可以分开画呢 (DONE)，
+# ④咱们的运行过程中是否可以加入一个暂停pause键  (DONE)
+# TODO 同时再加上刚刚你说的那个功能，多加几个关键帧。
+# Todo 时间轴，打点
