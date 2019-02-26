@@ -176,7 +176,6 @@ class Kinetics(Frame):
                                    )
         self.chkbtn2.pack(side=TOP, anchor='w')
 
-
         self.chkvar3 = IntVar()
         self.chkvar3.set(1)
         self.chkbtn3 = Checkbutton(self.fm_2, text="Draw Acceleration", variable=self.chkvar3,
@@ -267,14 +266,14 @@ class Kinetics(Frame):
                                   justify='center', wraplength=180)
         self.lb_file_name.pack(side=BOTTOM)
 
-        self.canvas = Canvas(self.fm_1)
+        self.canvas = Canvas(self.fm_1, bg='white')
         self.canvas.config(width=wid-200, height=hei)
         self.canvas.pack(side=TOP, fill=BOTH, expand=YES)
 
         self.pack(fill=BOTH, expand=1)
 
         # read file
-        self.time_frames = []
+        self.time_frames = list()
         self.csv_data = None
         self.read_in()
 
@@ -284,7 +283,7 @@ class Kinetics(Frame):
         self.paused_at_frame = 0
 
     def read_in(self):
-        self.time_frames = []
+        self.time_frames = list()
         try:
             f = open(self.filename+'.frames', "rb")
             self.time_frames = pickle.load(f)
@@ -296,7 +295,7 @@ class Kinetics(Frame):
             self.read_csv_data(self.filename)
 
             # generate time frames
-            # self.time_frames=[]
+            # self.time_frames = list()
             self.generate_time_frames()
             f = open(self.filename+'.frames', "wb")
             pickle.dump(self.time_frames, f)
@@ -311,13 +310,31 @@ class Kinetics(Frame):
 
         # self.load_parameters()  # load other parameters
 
+    def draw_a_time_frame(self, i):
+        print("Drawing frame {}...".format(i))
+        t = self.time_frames[i]  # temporary variable, the current time frame.
+
+        # Draw the 'threshold on' time point
+        if i == self.parameters['threshold_on']:
+            current_point = dict()
+            current_point['Y5'] = self.flip_x(self.transform(t.info['Y5']))
+            current_point['Z5'] = self.flip_y(self.transform(t.info['Z5']))
+            current_point['Y5v'] = t.info['Y5\'']
+            current_point['Z5v'] = t.info['Z5\'']
+            current_point['Y5a'] = t.info['Y5\'\'']
+            current_point['Z5a'] = t.info['Z5\'\'']
+            current_point['yz_combined_velocity'] = t.info['yz_combined_velocity']
+            current_point['yz_combined_acceleration'] = t.info['yz_combined_acceleration']
+            print('Draw V/A for this ''threshold on'' frame')
+            self.draw_velocity_acceleration(current_point)
+
     def draw_all_time_frames(self):
         print("Start drawing time frames")
         self.critical_point = dict()  # the first point going upward
         self.last_point = [0, 0]  # Store the last point for drawing trajectory
         # for i in range(len(self.time_frames)):
         for i in range(self.parameters['lower_frame_limit'], self.parameters['upper_frame_limit']):
-            print(i)
+            print("Drawing frame {}...".format(i))
             if self.paused == 1:  # exit when paused
                 return
 
@@ -543,7 +560,7 @@ class Kinetics(Frame):
         self.canvas.update()
 
     def draw_stick(self, pts, color):
-        pts_scaled = []
+        pts_scaled = list()
         for p in pts:
             pts_scaled.append(self.transform(p))  # enlarge by 5 times then offset backward
         # Draw the sticks
@@ -591,11 +608,12 @@ class Kinetics(Frame):
         csv_data -> time frames
         """
         print("Generating time frames...")
-        column_titles =[]
+        column_titles = list()
         for line_list in self.csv_data:
             column_titles.append(line_list)
 
-        self.upper_frame_limit = self.csv_data.shape[0]
+        # self.upper_frame_limit = self.csv_data.shape[0]
+        self.parameters['upper_frame_limit'] = self.csv_data.shape[0]
 
         for i in range(self.upper_frame_limit):
             information = dict()
@@ -631,3 +649,7 @@ if __name__ == '__main__':
 # ④咱们的运行过程中是否可以加入一个暂停pause键  (DONE)
 # TODO 同时再加上刚刚你说的那个功能，多加几个关键帧。
 # Todo 时间轴，打点
+# 背景改成白色
+# TODO Pause暂停后可以继续
+# TODO 速度和加速度箭头长度调整
+# TODO 解决data0213的load问题
