@@ -14,10 +14,40 @@ class Kinetics(Frame):
         super().__init__(master)
         self.master = master
 
+        # Viewer and Controllers part
         self.fm_1 = LabelFrame(self.master, text='Viewer', width=wid-200)
         self.fm_1.propagate(False)
         self.fm_1.pack(side=LEFT, fill=BOTH, expand=YES)
 
+        self.canvas = Canvas(self.fm_1, bg='white')
+        self.canvas.config(width=wid - 200, height=hei-170)
+        self.canvas.pack(side=TOP, fill=BOTH, expand=YES)
+
+        # Simulation Controller: Slider
+        self.fm_3 = LabelFrame(self.fm_1, width=wid-200)
+        self.fm_3.propagate(False)
+        self.fm_3.pack(side=TOP, fill=BOTH, expand=YES)
+        self.slider = Scale(self.fm_3, from_=1, to=1000, orient="horizontal")
+        self.slider.bind("<buttonRelease-1",
+                         func=None
+                         )
+        self.slider.pack(side=TOP, fill=X)
+
+        # Simulation Controller: Button
+        self.fm_4 = Frame(self.fm_3, width=wid-200)
+        self.fm_4.pack(side=TOP, fill=BOTH)
+
+
+        self.btn1 = Button(self.fm_4, text='Start over', command=self.start_over)
+        self.btn1.pack(side=LEFT, fill=BOTH, expand=YES)
+
+        self.btn4 = Button(self.fm_4, text='Pause', command=self.pause)
+        self.btn4.pack(side=LEFT, fill=BOTH, expand=YES)
+
+        self.btn5 = Button(self.fm_4, text='Resume', command=self.resume)
+        self.btn5.pack(side=LEFT, fill=BOTH, expand=YES)
+
+        # Settings part
         self.fm_2 = LabelFrame(self.master, text='Settings', width=200)
         self.fm_2.propagate(False)
         self.fm_2.pack(side=LEFT, fill=BOTH, expand=YES)
@@ -216,10 +246,7 @@ class Kinetics(Frame):
                                    )
         self.chkbtn7.pack(side=TOP, anchor='w')
 
-        self.fm_3 = Frame(self.fm_2)
-        self.fm_3.pack(side=TOP)
-
-        self.btn3 = Button(self.fm_3, text='Save params', width=50, command=self.save_parameters)
+        self.btn3 = Button(self.fm_2, text='Save params', width=50, command=self.save_parameters)
         self.btn3.pack(side=TOP)
         '''
         # Loading parameters can be automated.
@@ -228,14 +255,6 @@ class Kinetics(Frame):
         '''
 
         # Bottom-up layout
-        self.btn5 = Button(self.fm_2, text='Resume', width=100, command=self.resume)
-        self.btn5.pack(side=BOTTOM)
-
-        self.btn4 = Button(self.fm_2, text='Pause', width=100, command=self.pause)
-        self.btn4.pack(side=BOTTOM)
-
-        self.btn1 = Button(self.fm_2, text='Start over', width=100, command=self.start_over)
-        self.btn1.pack(side=BOTTOM)
 
         self.lb_frame_upper_int = IntVar()
         self.lb_frame_upper_int.set(self.parameters['upper_frame_limit'])
@@ -265,10 +284,6 @@ class Kinetics(Frame):
                                   #height=50,
                                   justify='center', wraplength=180)
         self.lb_file_name.pack(side=BOTTOM)
-
-        self.canvas = Canvas(self.fm_1, bg='white')
-        self.canvas.config(width=wid-200, height=hei)
-        self.canvas.pack(side=TOP, fill=BOTH, expand=YES)
 
         self.pack(fill=BOTH, expand=1)
 
@@ -309,24 +324,6 @@ class Kinetics(Frame):
         self.lb_frame_lower_str.set("Frames from: " + str(self.parameters['lower_frame_limit']))
 
         # self.load_parameters()  # load other parameters
-
-    def draw_a_time_frame(self, i):
-        print("Drawing frame {}...".format(i))
-        t = self.time_frames[i]  # temporary variable, the current time frame.
-
-        # Draw the 'threshold on' time point
-        if i == self.parameters['threshold_on']:
-            current_point = dict()
-            current_point['Y5'] = self.flip_x(self.transform(t.info['Y5']))
-            current_point['Z5'] = self.flip_y(self.transform(t.info['Z5']))
-            current_point['Y5v'] = t.info['Y5\'']
-            current_point['Z5v'] = t.info['Z5\'']
-            current_point['Y5a'] = t.info['Y5\'\'']
-            current_point['Z5a'] = t.info['Z5\'\'']
-            current_point['yz_combined_velocity'] = t.info['yz_combined_velocity']
-            current_point['yz_combined_acceleration'] = t.info['yz_combined_acceleration']
-            print('Draw V/A for this ''threshold on'' frame')
-            self.draw_velocity_acceleration(current_point)
 
     def draw_all_time_frames(self):
         print("Start drawing time frames")
@@ -516,41 +513,10 @@ class Kinetics(Frame):
     def draw_trajectory(self, t):
         # if self.last_point[1] < 596:  # self.flip_y(self.transform(t.info['Z5'])): # moving upward, set color to blue
         # in a frame range, set color to blue
-        '''
+
         if self.parameters['upward_end_frame'] > self.lb_frame_counter_int.get() > self.parameters['upward_start_frame']:
             c = colors[5]
-            if self.critical_point == {}:  # record this point as the first point upward
-                # cannot let self.critical_point = info, because '=' has a different meaning when used between dicts
-                self.critical_point['Y5'] = self.flip_x(self.transform(t.info['Y5']))
-                self.critical_point['Z5'] = self.flip_y(self.transform(t.info['Z5']))
-                self.critical_point['Y5v'] = t.info['Y5\'']
-                self.critical_point['Z5v'] = t.info['Z5\'']
-                self.critical_point['Y5a'] = t.info['Y5\'\'']
-                self.critical_point['Z5a'] = t.info['Z5\'\'']
-                self.critical_point['yz_combined_velocity'] = t.info['yz_combined_velocity']
-                self.critical_point['yz_combined_acceleration'] = t.info['yz_combined_acceleration']
 
-                if self.chkvar3.get() == 1:  # Check if to draw the arrows  # TODO check if this is needed to keep
-                    self.draw_velocity_acceleration(self.critical_point)
-        '''
-        if self.parameters['upward_end_frame'] > self.lb_frame_counter_int.get() > self.parameters['upward_start_frame']:
-            c = colors[5]
-            '''
-            if self.critical_point == {}:  # record this point as the first point upward
-                # cannot let self.critical_point = info, because '=' has a different meaning when used between dicts
-                self.critical_point['Y5'] = self.flip_x(self.transform(t.info['Y5']))
-                self.critical_point['Z5'] = self.flip_y(self.transform(t.info['Z5']))
-                self.critical_point['Y5v'] = t.info['Y5\'']
-                self.critical_point['Z5v'] = t.info['Z5\'']
-                self.critical_point['Y5a'] = t.info['Y5\'\'']
-                self.critical_point['Z5a'] = t.info['Z5\'\'']
-                self.critical_point['yz_combined_velocity'] = t.info['yz_combined_velocity']
-                self.critical_point['yz_combined_acceleration'] = t.info['yz_combined_acceleration']
-
-            #if self.chkvar3.get() == 1 and self.lb_frame_counter_int.get() == self.parameters['threshold_on']:  # Check if to draw the arrows  # TODO check if this is needed to keep
-                print("AAAAAAA")
-                self.draw_velocity_acceleration(self.critical_point)
-            '''
         else:  # not moving upward, set color to grey
             c = 'grey40'
         self.canvas.create_line(self.last_point[0]+self.parameters['offset_x'],
@@ -615,7 +581,7 @@ class Kinetics(Frame):
         # self.upper_frame_limit = self.csv_data.shape[0]
         self.parameters['upper_frame_limit'] = self.csv_data.shape[0]
 
-        for i in range(self.upper_frame_limit):
+        for i in range(self.parameters['upper_frame_limit']):
             information = dict()
             for title in column_titles:
                 information[title] = self.csv_data[title].tolist()[i]
@@ -642,6 +608,7 @@ if __name__ == '__main__':
     root.geometry(str(wid) + "x" + str(hei) + "+200+50")
     app = Kinetics(root)
     root.mainloop()
+
 
 # ①帧数的起止，以实际帧数为准，比如有的CSV文件起始帧数并不是1，有可能是2000+。 (DONE)
 # ②抬起相的starting 和ending都有个开关，因为有时候我需要大致浏览一下总体的步态情况，然后再选择感兴趣的抬起相进行起止。 (DONE)
