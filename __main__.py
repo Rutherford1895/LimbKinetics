@@ -192,7 +192,7 @@ class Kinetics(Frame):
         self.str11.set(self.parameters['acceleration_normalization_factor'])
         self.spb11 = Spinbox(self.fm_2,
                              from_=0.1,
-                             to=100,
+                             to=1000,
                              increment=0.1,
                              textvariable=self.str11,
                              command=self.set_a_arrow_factor)
