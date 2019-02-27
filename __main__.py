@@ -408,7 +408,7 @@ class Kinetics(Frame):
             # Use a list to collect ids on Canvas of this frame
             ids = list()
 
-            print("Drawing frame {}...".format(i))
+            # print("Drawing frame {}...".format(i))
             if self.paused == 1:  # exit when paused
                 return
 
