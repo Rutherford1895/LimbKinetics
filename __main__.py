@@ -67,7 +67,7 @@ class Kinetics(Frame):
                            "offset_x": -50,
                            "offset_y": -150,
                            "sleep_time": 0,
-                           "upward_period_1a": 405,
+                           "upward_period_1a": 414,
                            "upward_period_1b": 430,
                            "upward_period_2a": 0,
                            "upward_period_2b": 0,
