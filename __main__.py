@@ -69,12 +69,12 @@ class Kinetics(Frame):
                            "sleep_time": 0,
                            "upward_period_1a": 405,
                            "upward_period_1b": 430,
-                           "upward_period_2a": 405,
-                           "upward_period_2b": 430,
-                           "upward_period_3a": 405,
-                           "upward_period_3b": 430,
-                           "upward_period_4a": 405,
-                           "upward_period_4b": 430,
+                           "upward_period_2a": 0,
+                           "upward_period_2b": 0,
+                           "upward_period_3a": 0,
+                           "upward_period_3b": 0,
+                           "upward_period_4a": 0,
+                           "upward_period_4b": 0,
                            }
 
         self.filename = 'data1.csv'
@@ -651,6 +651,7 @@ class Kinetics(Frame):
     def set_upward_periods(self):
         self.threshold_on.clear()
         self.upward_frames.clear()
+
         self.set_upward_1a()
         self.set_upward_1b()
         self.upward_frames += list(range(self.parameters['upward_period_1a'], self.parameters['upward_period_1b']))
@@ -672,6 +673,7 @@ class Kinetics(Frame):
         self.paused = 0  # clear the paused flag
 
         # manually update parameters
+
         self.set_start_frame()
         self.set_end_frame()
         self.set_skip_frame()
