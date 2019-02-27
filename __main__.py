@@ -574,6 +574,12 @@ class Kinetics(Frame):
                     for j in self.canvas_ids[i]:
                         self.canvas.delete(j)  # delete all items on canvas that after this new starting point
                         self.canvas.update()
+        if self.paused_at_frame < self.slider.get():  # the slider bar was dragged forward
+            print(self.paused_at_frame, self.slider.get())
+            self.paused = 0
+            self.draw_time_frames(self.paused_at_frame, self.slider.get())  # draw the added frames
+            self.paused = 1
+
         self.canvas.update()
         self.paused_at_frame = self.slider.get()
 
