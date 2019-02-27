@@ -20,7 +20,7 @@ class Kinetics(Frame):
         self.fm_1.pack(side=LEFT, fill=BOTH, expand=YES)
 
         self.canvas = Canvas(self.fm_1, bg='white')
-        self.canvas.config(width=wid - 200, height=hei-200)
+        self.canvas.config(width=wid - 200, height=hei-250)
         self.canvas.pack(side=TOP, fill=BOTH, expand=YES)
 
         # Simulation Controller: Slider
@@ -67,9 +67,14 @@ class Kinetics(Frame):
                            "offset_x": -50,
                            "offset_y": -150,
                            "sleep_time": 0,
-                           "upward_start_frame": 405,
-                           "upward_end_frame": 430,
-                           "threshold_on": 413,
+                           "upward_period_1a": 405,
+                           "upward_period_1b": 430,
+                           "upward_period_2a": 405,
+                           "upward_period_2b": 430,
+                           "upward_period_3a": 405,
+                           "upward_period_3b": 430,
+                           "upward_period_4a": 405,
+                           "upward_period_4b": 430,
                            }
 
         self.filename = 'data1.csv'
@@ -154,44 +159,18 @@ class Kinetics(Frame):
                             command=self.set_sleep_time)
         self.spb6.pack(side=TOP)
 
-        self.lb7 = Label(self.fm_2, text='Upward starting by:')
-        self.lb7.pack(side=TOP, anchor='w')
-
-        self.str7 = StringVar()
-        self.str7.set(self.parameters['upward_start_frame'])
-        self.spb7 = Spinbox(self.fm_2,
-                            from_=1,
-                            to=self.parameters['upper_frame_limit'],
-                            increment=1,
-                            textvariable=self.str7,
-                            command=self.set_upward_start_frame)
-        self.spb7.pack(side=TOP)
-
-        self.lb8 = Label(self.fm_2, text='Upward ending by:')
-        self.lb8.pack(side=TOP, anchor='w')
-
-        self.str8 = StringVar()
-        self.str8.set(self.parameters['upward_end_frame'])
-        self.spb8 = Spinbox(self.fm_2,
-                            from_=1,
-                            to=self.parameters['upper_frame_limit'],
-                            increment=1,
-                            textvariable=self.str8,
-                            command=self.set_upward_end_frame)
-        self.spb8.pack(side=TOP)
-
-        self.lb9 = Label(self.fm_2, text='Threshold on:')
-        self.lb9.pack(side=TOP, anchor='w')
-
-        self.str9 = StringVar()
-        self.str9.set(self.parameters['threshold_on'])
-        self.spb9 = Spinbox(self.fm_2,
-                            from_=1,
-                            to=self.parameters['upper_frame_limit'],
-                            increment=1,
-                            textvariable=self.str9,
-                            command=self.set_threshold_on)
-        self.spb9.pack(side=TOP)
+        # self.lb9 = Label(self.fm_2, text='Threshold on:')
+        # self.lb9.pack(side=TOP, anchor='w')
+        # 
+        # self.str9 = StringVar()
+        # self.str9.set(self.parameters['threshold_on'])
+        # self.spb9 = Spinbox(self.fm_2,
+        #                     from_=1,
+        #                     to=self.parameters['upper_frame_limit'],
+        #                     increment=1,
+        #                     textvariable=self.str9,
+        #                     command=self.set_threshold_on)
+        # self.spb9.pack(side=TOP) # 
 
         self.lb10 = Label(self.fm_2, text='Velocity (black) divided by:')
         self.lb10.pack(side=TOP, anchor='w')
@@ -275,15 +254,127 @@ class Kinetics(Frame):
                                    )
         self.chkbtn7.pack(side=TOP, anchor='w')
 
-        self.btn3 = Button(self.fm_2, text='Save params', width=50, command=self.save_parameters)
+        self.btn3 = Button(self.fm_2, text='Save parameters', width=50, command=self.save_parameters)
         self.btn3.pack(side=TOP)
-        '''
-        # Loading parameters can be automated.
-        self.btn4 = Button(self.fm_3, text='Load params', width=50, command=self.load_parameters)
-        self.btn4.pack(side=TOP)
-        '''
 
-        # Bottom-up layout, Setting part 2
+        # Bottom-up layout, setting upward periods
+        self.fm_6 = Frame(self.fm_3, width=wid - 200)
+        self.fm_6.pack(side=BOTTOM, fill=BOTH, expand=YES)
+        # up1a
+        self.lb_up1a = Label(self.fm_6, text='Up1A:')
+        self.lb_up1a.pack(side=LEFT, anchor='w')
+
+        self.str_up1a = StringVar()
+        self.str_up1a.set(self.parameters['upward_period_1a'])
+        self.spb_up1a = Spinbox(self.fm_6,
+                                width=5,
+                                from_=1,
+                                to=self.parameters['upper_frame_limit'],
+                                increment=1,
+                                textvariable=self.str_up1a,
+                                command=self.set_upward_1a)
+        self.spb_up1a.pack(side=LEFT, expand=YES)
+        # up1b
+        self.lb_up1b = Label(self.fm_6, text='Up1B:')
+        self.lb_up1b.pack(side=LEFT, anchor='w')
+
+        self.str_up1b = StringVar()
+        self.str_up1b.set(self.parameters['upward_period_1b'])
+        self.spb_up1b = Spinbox(self.fm_6,
+                                width=5,
+                                from_=1,
+                                to=self.parameters['upper_frame_limit'],
+                                increment=1,
+                                textvariable=self.str_up1b,
+                                command=self.set_upward_1b)
+        self.spb_up1b.pack(side=LEFT, expand=YES)
+        # up2a
+        self.lb_up2a = Label(self.fm_6, text='Up2A:')
+        self.lb_up2a.pack(side=LEFT, anchor='w')
+
+        self.str_up2a = StringVar()
+        self.str_up2a.set(self.parameters['upward_period_2a'])
+        self.spb_up2a = Spinbox(self.fm_6,
+                                width=5,
+                                from_=1,
+                                to=self.parameters['upper_frame_limit'],
+                                increment=1,
+                                textvariable=self.str_up2a,
+                                command=self.set_upward_2a)
+        self.spb_up2a.pack(side=LEFT, expand=YES)
+        # up2b
+        self.lb_up2b = Label(self.fm_6, text='Up2B:')
+        self.lb_up2b.pack(side=LEFT, anchor='w')
+
+        self.str_up2b= StringVar()
+        self.str_up2b.set(self.parameters['upward_period_2b'])
+        self.spb_up2b = Spinbox(self.fm_6,
+                                width=5,
+                                from_=1,
+                                to=self.parameters['upper_frame_limit'],
+                                increment=1,
+                                textvariable=self.str_up2b,
+                                command=self.set_upward_2b)
+        self.spb_up2b.pack(side=LEFT, expand=YES)
+        # up3a
+        self.lb_up3a = Label(self.fm_6, text='Up3A:')
+        self.lb_up3a.pack(side=LEFT, anchor='w')
+
+        self.str_up3a = StringVar()
+        self.str_up3a.set(self.parameters['upward_period_3a'])
+        self.spb_up3a = Spinbox(self.fm_6,
+                                width=5,
+                                from_=1,
+                                to=self.parameters['upper_frame_limit'],
+                                increment=1,
+                                textvariable=self.str_up3a,
+                                command=self.set_upward_3a)
+        self.spb_up3a.pack(side=LEFT, expand=YES)
+        # up1b
+        self.lb_up3b = Label(self.fm_6, text='Up3B:')
+        self.lb_up3b.pack(side=LEFT, anchor='w')
+
+        self.str_up3b = StringVar()
+        self.str_up3b.set(self.parameters['upward_period_3b'])
+        self.spb_up3b = Spinbox(self.fm_6,
+                                width=5,
+                                from_=1,
+                                to=self.parameters['upper_frame_limit'],
+                                increment=1,
+                                textvariable=self.str_up3b,
+                                command=self.set_upward_3b)
+        self.spb_up3b.pack(side=LEFT, expand=YES)
+        # up2a
+        self.lb_up4a = Label(self.fm_6, text='Up4A:')
+        self.lb_up4a.pack(side=LEFT, anchor='w')
+
+        self.str_up4a = StringVar()
+        self.str_up4a.set(self.parameters['upward_period_4a'])
+        self.spb_up4a = Spinbox(self.fm_6,
+                                width=5,
+                                from_=1,
+                                to=self.parameters['upper_frame_limit'],
+                                increment=1,
+                                textvariable=self.str_up4a,
+                                command=self.set_upward_4a)
+        self.spb_up4a.pack(side=LEFT, expand=YES)
+        # up2b
+        self.lb_up4b = Label(self.fm_6, text='Up4B:')
+        self.lb_up4b.pack(side=LEFT, anchor='w')
+
+        self.str_up4b = StringVar()
+        self.str_up4b.set(self.parameters['upward_period_4b'])
+        self.spb_up4b = Spinbox(self.fm_6,
+                                width=5,
+                                from_=1,
+                                to=self.parameters['upper_frame_limit'],
+                                increment=1,
+                                textvariable=self.str_up4b,
+                                command=self.set_upward_4b)
+        self.spb_up4b.pack(side=LEFT, expand=YES)
+
+
+        # Bottom-up layout, displaying frame range
         self.fm_5 = Frame(self.fm_3, width=wid - 200)
         self.fm_5.pack(side=BOTTOM, fill=BOTH, expand=YES)
 
@@ -333,6 +424,10 @@ class Kinetics(Frame):
 
         # canvas item ids
         self.canvas_ids = dict()
+
+        # upward frames
+        self.upward_frames = list()
+        self.threshold_on = list()
 
     def read_in(self):
         self.time_frames = list()
@@ -415,7 +510,8 @@ class Kinetics(Frame):
             t = self.time_frames[i - self.parameters['lower_frame_limit']]  # temporary variable, the current time frame
             # Draw the threshold on time point
 
-            if i == self.parameters['threshold_on']:
+            #if i == self.parameters['threshold_on']:
+            if i in self.threshold_on:  # There are multiple frames for threshold on
                 print('Draw V/A for this ''threshold on'' frame')
                 ids += self.draw_velocity_acceleration(t.info)
 
@@ -423,8 +519,8 @@ class Kinetics(Frame):
             # 200 Hz -> lower frequency, but frequency gets higher in the upward part.
 
             # in a frame range, raise the frequency
-            # if self.parameters['upward_end_frame'] > self.lb_frame_counter_int.get() > self.parameters['upward_start_frame']:
-            if self.parameters['upward_start_frame'] < self.frame_counter < self.parameters['upward_end_frame']:
+            #if self.parameters['upward_period_1a'] < self.frame_counter < self.parameters['upward_period_1b']:
+            if self.frame_counter in self.upward_frames:
                 real_time_skip_frame = max(self.parameters['skip_frame']/10, 1)  # increase frequency by lowering skip_frame
             else:
                 real_time_skip_frame = self.parameters['skip_frame']
@@ -522,20 +618,55 @@ class Kinetics(Frame):
     def set_sleep_time(self):
         self.parameters['sleep_time'] = float(self.spb6.get())
 
-    def set_upward_start_frame(self):
-        self.parameters['upward_start_frame'] = int(self.spb7.get())
+    def set_upward_1a(self):
+        self.parameters['upward_period_1a'] = int(self.spb_up1a.get())
 
-    def set_upward_end_frame(self):
-        self.parameters['upward_end_frame'] = int(self.spb8.get())
+    def set_upward_1b(self):
+        self.parameters['upward_period_1b'] = int(self.spb_up1b.get())
 
-    def set_threshold_on(self):
-        self.parameters['threshold_on'] = int(self.spb9.get())
+    def set_upward_2a(self):
+        self.parameters['upward_period_2a'] = int(self.spb_up2a.get())
+
+    def set_upward_2b(self):
+        self.parameters['upward_period_2b'] = int(self.spb_up2b.get())
+
+    def set_upward_3a(self):
+        self.parameters['upward_period_3a'] = int(self.spb_up3a.get())
+
+    def set_upward_3b(self):
+        self.parameters['upward_period_3b'] = int(self.spb_up3b.get())
+
+    def set_upward_4a(self):
+        self.parameters['upward_period_4a'] = int(self.spb_up4a.get())
+
+    def set_upward_4b(self):
+        self.parameters['upward_period_4b'] = int(self.spb_up4b.get())
 
     def set_v_arrow_factor(self):
         self.parameters['velocity_normalization_factor'] = float(self.spb10.get())
 
     def set_a_arrow_factor(self):
         self.parameters['acceleration_normalization_factor'] = float(self.spb11.get())
+
+    def set_upward_periods(self):
+        self.threshold_on.clear()
+        self.upward_frames.clear()
+        self.set_upward_1a()
+        self.set_upward_1b()
+        self.upward_frames += list(range(self.parameters['upward_period_1a'], self.parameters['upward_period_1b']))
+        self.set_upward_2a()
+        self.set_upward_2b()
+        self.upward_frames += list(range(self.parameters['upward_period_2a'], self.parameters['upward_period_2b']))
+        self.set_upward_3a()
+        self.set_upward_3b()
+        self.upward_frames += list(range(self.parameters['upward_period_3a'], self.parameters['upward_period_3b']))
+        self.set_upward_4a()
+        self.set_upward_4b()
+        self.upward_frames += list(range(self.parameters['upward_period_4a'], self.parameters['upward_period_4b']))
+        self.threshold_on.append(self.parameters['upward_period_1a'])
+        self.threshold_on.append(self.parameters['upward_period_2a'])
+        self.threshold_on.append(self.parameters['upward_period_3a'])
+        self.threshold_on.append(self.parameters['upward_period_4a'])
 
     def start_over(self):
         self.paused = 0  # clear the paused flag
@@ -547,9 +678,7 @@ class Kinetics(Frame):
         self.set_offset_x()
         self.set_offset_y()
         self.set_sleep_time()
-        self.set_upward_start_frame()
-        self.set_upward_end_frame()
-        self.set_threshold_on()
+        self.set_upward_periods()
         self.set_v_arrow_factor()
         self.set_v_arrow_factor()
 
@@ -570,9 +699,7 @@ class Kinetics(Frame):
         self.set_offset_x()
         self.set_offset_y()
         self.set_sleep_time()
-        self.set_upward_start_frame()
-        self.set_upward_end_frame()
-        self.set_threshold_on()
+        self.set_upward_periods()
         self.set_v_arrow_factor()
         self.set_a_arrow_factor()
 
@@ -582,7 +709,7 @@ class Kinetics(Frame):
         f1 = open(self.filename + '.params', "wb")
         pickle.dump(self.parameters, f1)
         f1.close()
-        print("Parameters for",self.filename, "saved.")
+        print("Parameters for", self.filename, "saved.")
 
     def update_ui_parameters(self):
         self.str1.set(self.parameters['start_frame'])
@@ -591,9 +718,7 @@ class Kinetics(Frame):
         self.str4.set(self.parameters['offset_x'])
         self.str5.set(self.parameters['offset_y'])
         self.str6.set(self.parameters['sleep_time'])
-        self.str7.set(self.parameters['upward_start_frame'])
-        self.str8.set(self.parameters['upward_end_frame'])
-        self.str9.set(self.parameters['threshold_on'])
+        self.set_upward_periods()
         self.str10.set(self.parameters['velocity_normalization_factor'])
         self.str11.set(self.parameters['acceleration_normalization_factor'])
 
@@ -648,8 +773,8 @@ class Kinetics(Frame):
         # if self.last_point[1] < 596:  # self.flip_y(self.transform(t.info['Z5'])): # moving upward, set color to blue
         # in a frame range, set color to blue
 
-        # if self.parameters['upward_end_frame'] > self.lb_frame_counter_int.get() > self.parameters['upward_start_frame']:
-        if self.parameters['upward_end_frame'] > self.frame_counter > self.parameters['upward_start_frame']:
+        # if self.parameters['upward_period_1b'] > self.frame_counter > self.parameters['upward_period_1a']:
+        if self.frame_counter in self.upward_frames:
             c = colors[5]
 
         else:  # not moving upward, set color to grey
