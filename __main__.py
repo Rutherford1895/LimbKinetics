@@ -820,7 +820,7 @@ class Kinetics(Frame):
     def transform(self, a):
         new_a = a * self.parameters['scale_factor'] + 0
         return new_a
-
+。
     def flip_x(self, b):
         new_b = (wid-200) - b
         return new_b
@@ -888,7 +888,7 @@ if __name__ == '__main__':
 # ②抬起相的starting 和ending都有个开关，因为有时候我需要大致浏览一下总体的步态情况，然后再选择感兴趣的抬起相进行起止。
 # ③a和v是否可以分开画呢
 # ④咱们的运行过程中是否可以加入一个暂停pause键
-# TODO 同时再加上刚刚你说的那个功能，多加几个关键帧。
+# 同时再加上刚刚你说的那个功能，多加几个关键帧。
 # 时间轴，打点
 # 背景改成白色
 # Pause暂停后可以继续
