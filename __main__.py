@@ -374,7 +374,7 @@ class Kinetics(Frame):
                             to=self.parameters['upper_frame_limit'],  # Temporarily like this
                             orient="horizontal")
         self.slider.bind("<ButtonRelease-1>",
-                         func=self.start_from_a_certain_frame  # TODO Add a function
+                         func=self.start_from_a_certain_frame
                          )
         self.slider.pack(side=BOTTOM, fill=X, expand=YES)
         print("Parameters:\n", self.parameters)
@@ -492,7 +492,7 @@ class Kinetics(Frame):
                             to=self.parameters['upper_frame_limit'],  # Temporarily like this
                             orient="horizontal")
         self.slider.bind("<ButtonRelease-1>",
-                         func=self.start_from_a_certain_frame,  # TODO Add a function
+                         func=self.start_from_a_certain_frame
                          )
         self.slider.pack(side=BOTTOM, fill=X, expand=YES)
 
@@ -506,7 +506,7 @@ class Kinetics(Frame):
                             to=self.parameters['upper_frame_limit'],  # Temporarily like this
                             orient="horizontal")
         self.slider.bind("<ButtonRelease-1>",
-                         func=self.start_from_a_certain_frame  # TODO Add a function
+                         func=self.start_from_a_certain_frame
                          )
         self.slider.pack(side=BOTTOM, fill=X, expand=YES)
 
