@@ -1073,7 +1073,7 @@ class Kinetics(Frame):
     def transform(self, a):
         new_a = a * self.parameters['scale_factor'] + 0
         return new_a
-。
+
     def flip_x(self, b):
         new_b = (wid-200) - b
         return new_b
@@ -1147,3 +1147,5 @@ if __name__ == '__main__':
 # Pause暂停后可以继续
 # 速度和加速度箭头长度调整
 # 解决data0213的load问题
+# TODO 左走右走：反向开关
+# TODO 图像居中：自动化
