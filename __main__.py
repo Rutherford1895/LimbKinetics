@@ -20,7 +20,7 @@ class Kinetics(Frame):
         self.fm_1.pack(side=LEFT, fill=BOTH, expand=YES)
 
         self.canvas = Canvas(self.fm_1, bg='white')
-        self.canvas.config(width=wid - 200, height=hei-250)
+        self.canvas.config(width=wid - 200, height=hei-350)
         self.canvas.pack(side=TOP, fill=BOTH, expand=YES)
 
         # Simulation Controller: Slider
@@ -75,6 +75,18 @@ class Kinetics(Frame):
                            "upward_period_3b": 0,
                            "upward_period_4a": 0,
                            "upward_period_4b": 0,
+                           "upward_period_5a": 0,
+                           "upward_period_5b": 0,
+                           "upward_period_6a": 0,
+                           "upward_period_6b": 0,
+                           "upward_period_7a": 0,
+                           "upward_period_7b": 0,
+                           "upward_period_8a": 0,
+                           "upward_period_8b": 0,
+                           "upward_period_9a": 0,
+                           "upward_period_9b": 0,
+                           "upward_period_10a": 0,
+                           "upward_period_10b": 0,
                            }
 
         self.filename = 'data1.csv'
@@ -258,6 +270,150 @@ class Kinetics(Frame):
         self.btn3.pack(side=TOP)
 
         # Bottom-up layout, setting upward periods
+        self.fm_7 = Frame(self.fm_3, width=wid - 200)
+        self.fm_7.pack(side=BOTTOM, fill=BOTH, expand=YES)
+        # up6a
+        self.lb_up6a = Label(self.fm_7, text='Up6A:')
+        self.lb_up6a.pack(side=LEFT, anchor='w')
+
+        self.str_up6a = StringVar()
+        self.str_up6a.set(self.parameters['upward_period_6a'])
+        self.spb_up6a = Spinbox(self.fm_7,
+                                width=5,
+                                from_=1,
+                                to=self.parameters['upper_frame_limit'],
+                                increment=1,
+                                textvariable=self.str_up6a,
+                                command=self.set_upward_6a)
+        self.spb_up6a.pack(side=LEFT, expand=YES)
+        # up6b
+        self.lb_up6b = Label(self.fm_7, text='Up6B:')
+        self.lb_up6b.pack(side=LEFT, anchor='w')
+
+        self.str_up6b = StringVar()
+        self.str_up6b.set(self.parameters['upward_period_6b'])
+        self.spb_up6b = Spinbox(self.fm_7,
+                                width=5,
+                                from_=1,
+                                to=self.parameters['upper_frame_limit'],
+                                increment=1,
+                                textvariable=self.str_up6b,
+                                command=self.set_upward_6b)
+        self.spb_up6b.pack(side=LEFT, expand=YES)
+        # up7a
+        self.lb_up7a = Label(self.fm_7, text='Up7A:')
+        self.lb_up7a.pack(side=LEFT, anchor='w')
+
+        self.str_up7a = StringVar()
+        self.str_up7a.set(self.parameters['upward_period_7a'])
+        self.spb_up7a = Spinbox(self.fm_7,
+                                width=5,
+                                from_=1,
+                                to=self.parameters['upper_frame_limit'],
+                                increment=1,
+                                textvariable=self.str_up7a,
+                                command=self.set_upward_7a)
+        self.spb_up7a.pack(side=LEFT, expand=YES)
+        # up7b
+        self.lb_up7b = Label(self.fm_7, text='Up7B:')
+        self.lb_up7b.pack(side=LEFT, anchor='w')
+
+        self.str_up7b= StringVar()
+        self.str_up7b.set(self.parameters['upward_period_7b'])
+        self.spb_up7b = Spinbox(self.fm_7,
+                                width=5,
+                                from_=1,
+                                to=self.parameters['upper_frame_limit'],
+                                increment=1,
+                                textvariable=self.str_up7b,
+                                command=self.set_upward_7b)
+        self.spb_up7b.pack(side=LEFT, expand=YES)
+        # up8a
+        self.lb_up8a = Label(self.fm_7, text='Up8A:')
+        self.lb_up8a.pack(side=LEFT, anchor='w')
+
+        self.str_up8a = StringVar()
+        self.str_up8a.set(self.parameters['upward_period_8a'])
+        self.spb_up8a = Spinbox(self.fm_7,
+                                width=5,
+                                from_=1,
+                                to=self.parameters['upper_frame_limit'],
+                                increment=1,
+                                textvariable=self.str_up8a,
+                                command=self.set_upward_8a)
+        self.spb_up8a.pack(side=LEFT, expand=YES)
+        # up8b
+        self.lb_up8b = Label(self.fm_7, text='Up8B:')
+        self.lb_up8b.pack(side=LEFT, anchor='w')
+
+        self.str_up8b = StringVar()
+        self.str_up8b.set(self.parameters['upward_period_8b'])
+        self.spb_up8b = Spinbox(self.fm_7,
+                                width=5,
+                                from_=1,
+                                to=self.parameters['upper_frame_limit'],
+                                increment=1,
+                                textvariable=self.str_up8b,
+                                command=self.set_upward_8b)
+        self.spb_up8b.pack(side=LEFT, expand=YES)
+        # up9a
+        self.lb_up9a = Label(self.fm_7, text='Up4A:')
+        self.lb_up9a.pack(side=LEFT, anchor='w')
+
+        self.str_up9a = StringVar()
+        self.str_up9a.set(self.parameters['upward_period_9a'])
+        self.spb_up9a = Spinbox(self.fm_7,
+                                width=5,
+                                from_=1,
+                                to=self.parameters['upper_frame_limit'],
+                                increment=1,
+                                textvariable=self.str_up9a,
+                                command=self.set_upward_9a)
+        self.spb_up9a.pack(side=LEFT, expand=YES)
+        # up9b
+        self.lb_up9b = Label(self.fm_7, text='Up9B:')
+        self.lb_up9b.pack(side=LEFT, anchor='w')
+
+        self.str_up9b = StringVar()
+        self.str_up9b.set(self.parameters['upward_period_9b'])
+        self.spb_up9b = Spinbox(self.fm_7,
+                                width=5,
+                                from_=1,
+                                to=self.parameters['upper_frame_limit'],
+                                increment=1,
+                                textvariable=self.str_up9b,
+                                command=self.set_upward_9b)
+        self.spb_up9b.pack(side=LEFT, expand=YES)
+        # up10a
+        self.lb_up10a = Label(self.fm_7, text='Up10A:')
+        self.lb_up10a.pack(side=LEFT, anchor='w')
+
+        self.str_up10a = StringVar()
+        self.str_up10a.set(self.parameters['upward_period_10a'])
+        self.spb_up10a = Spinbox(self.fm_7,
+                                width=5,
+                                from_=1,
+                                to=self.parameters['upper_frame_limit'],
+                                increment=1,
+                                textvariable=self.str_up10a,
+                                command=self.set_upward_10a)
+        self.spb_up10a.pack(side=LEFT, expand=YES)
+        # up10b
+        self.lb_up10b = Label(self.fm_7, text='Up10B:')
+        self.lb_up10b.pack(side=LEFT, anchor='w')
+
+        self.str_up10b = StringVar()
+        self.str_up10b.set(self.parameters['upward_period_10b'])
+        self.spb_up10b = Spinbox(self.fm_7,
+                                width=5,
+                                from_=1,
+                                to=self.parameters['upper_frame_limit'],
+                                increment=1,
+                                textvariable=self.str_up10b,
+                                command=self.set_upward_10b)
+        self.spb_up10b.pack(side=LEFT, expand=YES)
+
+
         self.fm_6 = Frame(self.fm_3, width=wid - 200)
         self.fm_6.pack(side=BOTTOM, fill=BOTH, expand=YES)
         # up1a
@@ -306,7 +462,7 @@ class Kinetics(Frame):
         self.lb_up2b = Label(self.fm_6, text='Up2B:')
         self.lb_up2b.pack(side=LEFT, anchor='w')
 
-        self.str_up2b= StringVar()
+        self.str_up2b = StringVar()
         self.str_up2b.set(self.parameters['upward_period_2b'])
         self.spb_up2b = Spinbox(self.fm_6,
                                 width=5,
@@ -330,7 +486,7 @@ class Kinetics(Frame):
                                 textvariable=self.str_up3a,
                                 command=self.set_upward_3a)
         self.spb_up3a.pack(side=LEFT, expand=YES)
-        # up1b
+        # up3b
         self.lb_up3b = Label(self.fm_6, text='Up3B:')
         self.lb_up3b.pack(side=LEFT, anchor='w')
 
@@ -344,7 +500,7 @@ class Kinetics(Frame):
                                 textvariable=self.str_up3b,
                                 command=self.set_upward_3b)
         self.spb_up3b.pack(side=LEFT, expand=YES)
-        # up2a
+        # up4a
         self.lb_up4a = Label(self.fm_6, text='Up4A:')
         self.lb_up4a.pack(side=LEFT, anchor='w')
 
@@ -358,7 +514,7 @@ class Kinetics(Frame):
                                 textvariable=self.str_up4a,
                                 command=self.set_upward_4a)
         self.spb_up4a.pack(side=LEFT, expand=YES)
-        # up2b
+        # up4b
         self.lb_up4b = Label(self.fm_6, text='Up4B:')
         self.lb_up4b.pack(side=LEFT, anchor='w')
 
@@ -372,6 +528,34 @@ class Kinetics(Frame):
                                 textvariable=self.str_up4b,
                                 command=self.set_upward_4b)
         self.spb_up4b.pack(side=LEFT, expand=YES)
+        # up5a
+        self.lb_up5a = Label(self.fm_6, text='Up5A:')
+        self.lb_up5a.pack(side=LEFT, anchor='w')
+
+        self.str_up5a = StringVar()
+        self.str_up5a.set(self.parameters['upward_period_4a'])
+        self.spb_up5a = Spinbox(self.fm_6,
+                                width=5,
+                                from_=1,
+                                to=self.parameters['upper_frame_limit'],
+                                increment=1,
+                                textvariable=self.str_up5a,
+                                command=self.set_upward_5a)
+        self.spb_up5a.pack(side=LEFT, expand=YES)
+        # up5b
+        self.lb_up5b = Label(self.fm_6, text='Up5B:')
+        self.lb_up5b.pack(side=LEFT, anchor='w')
+
+        self.str_up5b = StringVar()
+        self.str_up5b.set(self.parameters['upward_period_4b'])
+        self.spb_up5b = Spinbox(self.fm_6,
+                                width=5,
+                                from_=1,
+                                to=self.parameters['upper_frame_limit'],
+                                increment=1,
+                                textvariable=self.str_up5b,
+                                command=self.set_upward_5b)
+        self.spb_up5b.pack(side=LEFT, expand=YES)
 
 
         # Bottom-up layout, displaying frame range
@@ -648,6 +832,42 @@ class Kinetics(Frame):
     def set_upward_4b(self):
         self.parameters['upward_period_4b'] = int(self.spb_up4b.get())
 
+    def set_upward_5a(self):
+        self.parameters['upward_period_5a'] = int(self.spb_up5a.get())
+
+    def set_upward_5b(self):
+        self.parameters['upward_period_5b'] = int(self.spb_up5b.get())
+
+    def set_upward_6a(self):
+        self.parameters['upward_period_6a'] = int(self.spb_up6a.get())
+
+    def set_upward_6b(self):
+        self.parameters['upward_period_6b'] = int(self.spb_up6b.get())
+
+    def set_upward_7a(self):
+        self.parameters['upward_period_7a'] = int(self.spb_up7a.get())
+
+    def set_upward_7b(self):
+        self.parameters['upward_period_7b'] = int(self.spb_up7b.get())
+
+    def set_upward_8a(self):
+        self.parameters['upward_period_8a'] = int(self.spb_up8a.get())
+
+    def set_upward_8b(self):
+        self.parameters['upward_period_8b'] = int(self.spb_up8b.get())
+
+    def set_upward_9a(self):
+        self.parameters['upward_period_9a'] = int(self.spb_up9a.get())
+
+    def set_upward_9b(self):
+        self.parameters['upward_period_9b'] = int(self.spb_up9b.get())
+
+    def set_upward_10a(self):
+        self.parameters['upward_period_10a'] = int(self.spb_up10a.get())
+
+    def set_upward_10b(self):
+        self.parameters['upward_period_10b'] = int(self.spb_up10b.get())
+
     def set_v_arrow_factor(self):
         self.parameters['velocity_normalization_factor'] = float(self.spb10.get())
 
@@ -670,10 +890,35 @@ class Kinetics(Frame):
         self.set_upward_4a()
         self.set_upward_4b()
         self.upward_frames += list(range(self.parameters['upward_period_4a'], self.parameters['upward_period_4b']))
+        self.set_upward_5a()
+        self.set_upward_5b()
+        self.upward_frames += list(range(self.parameters['upward_period_5a'], self.parameters['upward_period_5b']))
+        self.set_upward_6a()
+        self.set_upward_6b()
+        self.upward_frames += list(range(self.parameters['upward_period_6a'], self.parameters['upward_period_6b']))
+        self.set_upward_7a()
+        self.set_upward_7b()
+        self.upward_frames += list(range(self.parameters['upward_period_7a'], self.parameters['upward_period_7b']))
+        self.set_upward_8a()
+        self.set_upward_8b()
+        self.upward_frames += list(range(self.parameters['upward_period_8a'], self.parameters['upward_period_8b']))
+        self.set_upward_9a()
+        self.set_upward_9b()
+        self.upward_frames += list(range(self.parameters['upward_period_9a'], self.parameters['upward_period_9b']))
+        self.set_upward_10a()
+        self.set_upward_10b()
+        self.upward_frames += list(range(self.parameters['upward_period_10a'], self.parameters['upward_period_10b']))
+
         self.threshold_on.append(self.parameters['upward_period_1a'])
         self.threshold_on.append(self.parameters['upward_period_2a'])
         self.threshold_on.append(self.parameters['upward_period_3a'])
         self.threshold_on.append(self.parameters['upward_period_4a'])
+        self.threshold_on.append(self.parameters['upward_period_5a'])
+        self.threshold_on.append(self.parameters['upward_period_6a'])
+        self.threshold_on.append(self.parameters['upward_period_7a'])
+        self.threshold_on.append(self.parameters['upward_period_8a'])
+        self.threshold_on.append(self.parameters['upward_period_9a'])
+        self.threshold_on.append(self.parameters['upward_period_10a'])
 
     def start_over(self):
         self.paused = 0  # clear the paused flag
@@ -884,7 +1129,7 @@ class TimeFrame:
 
 if __name__ == '__main__':
     root = Tk()
-    wid = 1000
+    wid = 1400
     hei = 800
     root.wm_title("Kinetics")
     root.geometry(str(wid) + "x" + str(hei) + "+200+50")
