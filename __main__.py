@@ -357,7 +357,7 @@ class Kinetics(Frame):
                                 command=self.set_upward_8b)
         self.spb_up8b.pack(side=LEFT, expand=YES)
         # up9a
-        self.lb_up9a = Label(self.fm_7, text='Up4A:')
+        self.lb_up9a = Label(self.fm_7, text='Up9A:')
         self.lb_up9a.pack(side=LEFT, anchor='w')
 
         self.str_up9a = StringVar()
