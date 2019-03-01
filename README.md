@@ -12,7 +12,7 @@ I used **pandas** to process the data and **tkinter** for the visualization part
 
 **Main Interface**
 
-![ScreenShot](./screenshots/screenshot_1.png)
+![ScreenShot](./screenshots/screenshot_2.png)
 
 ## Requirements
 
