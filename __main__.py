@@ -210,6 +210,19 @@ class Kinetics(Frame):
                              command=self.set_a_arrow_factor)
         self.spb11.pack(side=TOP)
 
+        self.lb12 = Label(self.fm_2, text='Scale factor:')
+        self.lb12.pack(side=TOP, anchor='w')
+
+        self.str12 = StringVar()
+        self.str12.set(self.parameters['scale_factor'])
+        self.spb12 = Spinbox(self.fm_2,
+                             from_=0.1,
+                             to=10,
+                             increment=0.1,
+                             textvariable=self.str12,
+                             command=self.set_scale_factor)
+        self.spb12.pack(side=TOP)
+
         self.chkvar1 = IntVar()
         self.chkvar1.set(1)
         self.chkbtn1 = Checkbutton(self.fm_2, text="Draw sticks", variable=self.chkvar1,
@@ -265,6 +278,14 @@ class Kinetics(Frame):
                                    # height=5, width=20
                                    )
         self.chkbtn7.pack(side=TOP, anchor='w')
+
+        self.chkvar8 = IntVar()
+        self.chkvar8.set(1)
+        self.chkbtn8 = Checkbutton(self.fm_2, text="Horizontal Flip", variable=self.chkvar8,
+                                   onvalue=1, offvalue=0,
+                                   # height=5, width=20
+                                   )
+        self.chkbtn8.pack(side=TOP, anchor='w')
 
         self.btn3 = Button(self.fm_2, text='Save parameters', width=50, command=self.save_parameters)
         self.btn3.pack(side=TOP)
@@ -576,17 +597,11 @@ class Kinetics(Frame):
         self.lb_frame_lower = Label(self.fm_5, textvariable=self.lb_frame_lower_str)
         self.lb_frame_lower.pack(side=RIGHT, fill=BOTH, expand=YES)
 
-        '''
-        self.lb_frame_counter_int = IntVar()
-        self.lb_frame_counter_int.set(0)
-        self.lb_frame_counter_str = StringVar()
-        self.lb_frame_counter_str.set("Frame "+str(self.lb_frame_counter_int.get()))
-        self.lb_frame_counter = Label(self.fm_2, textvariable=self.lb_frame_counter_str)
-        self.lb_frame_counter.pack(side=BOTTOM, fill=BOTH, expand=YES)
-        '''
+        #self.btn_reload = Button(self.fm_2, text='Reload file', width=100, command=self.reload_file)
+        #self.btn_reload.pack(side=BOTTOM)
 
-        self.btn2 = Button(self.fm_2, text='Load file', width=100, command=self.load_file)
-        self.btn2.pack(side=BOTTOM)
+        self.btn_load = Button(self.fm_2, text='Load file', width=100, command=self.load_file)
+        self.btn_load.pack(side=BOTTOM)
 
         self.lb_file_name = Label(self.fm_2, text=self.filename,
                                   #height=50,
@@ -613,32 +628,27 @@ class Kinetics(Frame):
         self.upward_frames = list()
         self.threshold_on = list()
 
-    def read_in(self):
-        self.time_frames = list()
-        try:
-            f = open(self.filename+'.frames', "rb")
-            self.time_frames = pickle.load(f)
-            f.close()
-            print("Time frame data loaded.")
-        except IOError:
-            print("Time frame data file is not found. Generating...")
-            self.csv_data = None
-            self.read_csv_data(self.filename)
+    def read_in_from_saved(self):
+        f = open(self.filename + '.frames', "rb")
+        self.time_frames = pickle.load(f)
+        f.close()
+        print("Time frame data loaded from saved file.")
 
-            # generate time frames
-            self.generate_time_frames()
-            self.transformation()  # transform and offset before saving
-            f = open(self.filename+'.frames', "wb")
-            pickle.dump(self.time_frames, f)
-            f.close()
-            print("Time frame data saved.")
+    def read_in_from_new(self):
+        print("Time frame data file is not found. Generating...")
+        self.csv_data = None
+        self.read_csv_data(self.filename)
 
+        # generate time frames
+        self.generate_time_frames()
+
+    def read_in_initialize_parameters(self):
         self.parameters['upper_frame_limit'] = int(self.time_frames[-1].info['Frame'])
         self.parameters['lower_frame_limit'] = int(self.time_frames[0].info['Frame'])
         self.ensure_start_end_range()
 
         self.lb_frame_upper_int.set(self.parameters['upper_frame_limit'])
-        self.lb_frame_upper_str.set("Frames to: "+str(self.parameters['upper_frame_limit']))
+        self.lb_frame_upper_str.set("Frames to: " + str(self.parameters['upper_frame_limit']))
         self.lb_frame_lower_int.set(self.parameters['lower_frame_limit'])
         self.lb_frame_lower_str.set("Frames from: " + str(self.parameters['lower_frame_limit']))
 
@@ -658,6 +668,14 @@ class Kinetics(Frame):
         self.slider.pack(side=BOTTOM, fill=X, expand=YES)
         print("Parameters:\n", self.parameters)
         # self.load_parameters()  # load other parameters
+
+    def read_in(self):
+        try:
+            self.read_in_from_saved()
+        except IOError:
+            self.read_in_from_new()
+
+        self.read_in_initialize_parameters()
 
     def ensure_start_end_range(self):
         # Ensure simulation range within upper and lower boundary
@@ -874,6 +892,9 @@ class Kinetics(Frame):
     def set_a_arrow_factor(self):
         self.parameters['acceleration_normalization_factor'] = float(self.spb11.get())
 
+    def set_scale_factor(self):
+        self.parameters['scale_factor'] = float(self.spb12.get())
+
     def set_upward_periods(self):
         self.threshold_on.clear()
         self.upward_frames.clear()
@@ -933,7 +954,8 @@ class Kinetics(Frame):
         self.set_sleep_time()
         self.set_upward_periods()
         self.set_v_arrow_factor()
-        self.set_v_arrow_factor()
+        self.set_a_arrow_factor()
+        self.set_scale_factor()
 
         self.canvas.delete('all')
         self.canvas.update()
@@ -955,6 +977,7 @@ class Kinetics(Frame):
         self.set_upward_periods()
         self.set_v_arrow_factor()
         self.set_a_arrow_factor()
+        self.set_scale_factor()
 
         self.draw_time_frames(self.parameters['start_frame'], self.parameters['end_frame'])
 
@@ -982,7 +1005,7 @@ class Kinetics(Frame):
             f1.close()
             print(self.parameters)
             self.update_ui_parameters()  # update parameters in UI
-            print("Parameters for",self.filename, "loaded.")
+            print("Parameters for", self.filename, "loaded.")
         except IOError:
             print("Cannot find saved parameters for", self.filename, ".")
 
@@ -1004,17 +1027,37 @@ class Kinetics(Frame):
 
         # Draw velocity arrow
         if self.chkvar3.get() == 1:
-            ids.append(self.canvas.create_line(p['Y5']+self.parameters['offset_x'], p['Z5']+self.parameters['offset_y'],
-                                    p['Y5']-p['Y5v']/self.parameters['velocity_normalization_factor']+self.parameters['offset_x'],
-                                    p['Z5']-p['Z5v']/self.parameters['velocity_normalization_factor']+self.parameters['offset_y'],
-                                    arrow=LAST, fill='black'))
+            if self.chkvar8.get() == 1: # Horizontal flip
+                ids.append(self.canvas.create_line(p['Y5']+self.parameters['offset_x'],
+                                                   p['Z5']+self.parameters['offset_y'],
+                                                   p['Y5']-p['Y5v']/self.parameters['velocity_normalization_factor']+self.parameters['offset_x'],
+                                                   p['Z5']-p['Z5v']/self.parameters['velocity_normalization_factor']+self.parameters['offset_y'],
+                                                   arrow=LAST, fill='black'))
+            else:
+                ids.append(self.canvas.create_line(
+                    self.flip_x(p['Y5'] + self.parameters['offset_x']),
+                    p['Z5'] + self.parameters['offset_y'],
+                    self.flip_x(p['Y5'] - p['Y5v'] / self.parameters['velocity_normalization_factor'] + self.parameters['offset_x']),
+                    p['Z5'] - p['Z5v'] / self.parameters['velocity_normalization_factor'] + self.parameters['offset_y'],
+                    arrow=LAST, fill='black'))
 
         # Draw acceleration arrow
         if self.chkvar5.get() == 1:
-            ids.append(self.canvas.create_line(p['Y5']+self.parameters['offset_x'], p['Z5']+self.parameters['offset_y'],
-                                    p['Y5']-p['Y5a']/self.parameters['acceleration_normalization_factor']+self.parameters['offset_x'],
-                                    p['Z5']-p['Z5a']/self.parameters['acceleration_normalization_factor']+self.parameters['offset_y'],
-                                    arrow=LAST, fill='red'))
+            if self.chkvar8.get() == 1:
+                ids.append(self.canvas.create_line(
+                    p['Y5']+self.parameters['offset_x'],
+                    p['Z5']+self.parameters['offset_y'],
+                    p['Y5']-p['Y5a']/self.parameters['acceleration_normalization_factor']+self.parameters['offset_x'],
+                    p['Z5']-p['Z5a']/self.parameters['acceleration_normalization_factor']+self.parameters['offset_y'],
+                    arrow=LAST, fill='red'))
+            else:
+                ids.append(self.canvas.create_line(
+                    self.flip_x(p['Y5'] + self.parameters['offset_x']),
+                    p['Z5'] + self.parameters['offset_y'],
+                    self.flip_x(p['Y5'] - p['Y5a'] / self.parameters['acceleration_normalization_factor'] + self.parameters['offset_x']),
+                    p['Z5'] - p['Z5a'] / self.parameters['acceleration_normalization_factor'] + self.parameters['offset_y'],
+                    arrow=LAST, fill='red'))
+
 
         self.canvas.update()
         return ids
@@ -1032,46 +1075,84 @@ class Kinetics(Frame):
 
         else:  # not moving upward, set color to grey
             c = 'grey40'
-        ids.append(self.canvas.create_line(self.last_point[0]+self.parameters['offset_x'],
-                                self.last_point[1]+self.parameters['offset_y'],
-                                t.info['Y5']+self.parameters['offset_x'],
-                                t.info['Z5']+self.parameters['offset_y'], fill=c, width=2))
+        if self.chkvar8.get() == 1:  # Horizontal flip
+            ids.append(self.canvas.create_line(
+                self.last_point[0]+self.parameters['offset_x'],
+                self.last_point[1]+self.parameters['offset_y'],
+                t.info['Y5']+self.parameters['offset_x'],
+                t.info['Z5']+self.parameters['offset_y'], fill=c, width=2))
+        else:
+            ids.append(self.canvas.create_line(
+                self.flip_x(self.last_point[0] + self.parameters['offset_x']),
+                self.last_point[1] + self.parameters['offset_y'],
+                self.flip_x(t.info['Y5'] + self.parameters['offset_x']),
+                t.info['Z5'] + self.parameters['offset_y'], fill=c, width=2))
         self.canvas.update()
         return ids
 
     def draw_stick(self, pts, color):
         # create a list to collect item ids
         ids = list()
+        if self.chkvar8.get() == 1:
+            # Draw the sticks
+            ids.append(self.canvas.create_line(pts[0]+self.parameters['offset_x'],
+                                    pts[1]+self.parameters['offset_y'],
+                                    pts[2]+self.parameters['offset_x'],
+                                    pts[3]+self.parameters['offset_y'],
+                                    pts[4]+self.parameters['offset_x'],
+                                    pts[5]+self.parameters['offset_y'],
+                                    pts[6]+self.parameters['offset_x'],
+                                    pts[7]+self.parameters['offset_y'],
+                                    pts[8]+self.parameters['offset_x'],
+                                    pts[9]+self.parameters['offset_y'],
+                                    fill=color,
+                                    width=2))
 
-        # Draw the sticks
-        ids.append(self.canvas.create_line(pts[0]+self.parameters['offset_x'],
-                                pts[1]+self.parameters['offset_y'],
-                                pts[2]+self.parameters['offset_x'],
-                                pts[3]+self.parameters['offset_y'],
-                                pts[4]+self.parameters['offset_x'],
-                                pts[5]+self.parameters['offset_y'],
-                                pts[6]+self.parameters['offset_x'],
-                                pts[7]+self.parameters['offset_y'],
-                                pts[8]+self.parameters['offset_x'],
-                                pts[9]+self.parameters['offset_y'],
-                                fill=color,
-                                width=2))
+        else:
+            # Draw the sticks
+            ids.append(self.canvas.create_line(self.flip_x(pts[0] + self.parameters['offset_x']),
+                                               pts[1] + self.parameters['offset_y'],
+                                               self.flip_x(pts[2] + self.parameters['offset_x']),
+                                               pts[3] + self.parameters['offset_y'],
+                                               self.flip_x(pts[4] + self.parameters['offset_x']),
+                                               pts[5] + self.parameters['offset_y'],
+                                               self.flip_x(pts[6] + self.parameters['offset_x']),
+                                               pts[7] + self.parameters['offset_y'],
+                                               self.flip_x(pts[8] + self.parameters['offset_x']),
+                                               pts[9] + self.parameters['offset_y'],
+                                               fill=color,
+                                               width=2))
         # Draw the joints
         ids += (self.draw_dot(pts[0], pts[1]))
         ids += (self.draw_dot(pts[2], pts[3]))
         ids += (self.draw_dot(pts[4], pts[5]))
         ids += (self.draw_dot(pts[6], pts[7]))
+
         self.canvas.update()
         return ids
 
     def draw_dot(self, x, y, color='black'):
         # create a list to collect item ids
         ids = list()
-        ids.append(self.canvas.create_line(x+self.parameters['offset_x'], y+self.parameters['offset_y'], x+self.parameters['offset_x'], y+1+self.parameters['offset_y'], fill=color))
+        if self.chkvar8.get() == 1:
+            ids.append(self.canvas.create_line(
+                x+self.parameters['offset_x'],
+                y+self.parameters['offset_y'],
+                x+self.parameters['offset_x'],
+                y+1+self.parameters['offset_y'],
+                fill=color))
+        else:
+            ids.append(self.canvas.create_line(
+                self.flip_x(x + self.parameters['offset_x']),
+                y + self.parameters['offset_y'],
+                self.flip_x(x + self.parameters['offset_x']),
+                y + 1 + self.parameters['offset_y'],
+                fill=color))
         return ids
 
     def transform(self, a):
         new_a = a * self.parameters['scale_factor'] + 0
+        # new_a = a
         return new_a
 
     def flip_x(self, b):
@@ -1092,6 +1173,7 @@ class Kinetics(Frame):
                 time_frame.info[item_v[:-1]+'v'] = time_frame.info[item_v]
             for item_a in ['Y5\'\'', 'Z5\'\'']:
                 time_frame.info[item_a[:-2]+'a'] = time_frame.info[item_a]
+        print("Transformation of time_frames done.")
 
     def read_csv_data(self, fn):
         self.csv_data = pd.read_csv(fn)
@@ -1101,7 +1183,11 @@ class Kinetics(Frame):
         """
         csv_data -> time frames
         """
-        print("Generating time frames...")
+
+        # Clear exsiting time frames
+        self.time_frames.clear()
+
+        print("Generating time frames from loaded csv data...")
         column_titles = list()
         for line_list in self.csv_data:
             column_titles.append(line_list)
@@ -1113,6 +1199,12 @@ class Kinetics(Frame):
             for title in column_titles:
                 information[title] = self.csv_data[title].tolist()[i]
             self.time_frames.append(TimeFrame(i, information))
+
+        self.transformation()  # transform and offset before saving
+        f = open(self.filename + '.frames', "wb")
+        pickle.dump(self.time_frames, f)
+        f.close()
+        print("Time frame data saved. Length: {}".format(str(len(self.time_frames))))
 
 
 class TimeFrame:
