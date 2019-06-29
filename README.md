@@ -17,6 +17,7 @@ I used **pandas** to process the data and **tkinter** for the visualization part
 ## Requirements
 
 pandas
+
 pickle
 
 ## How to use
