@@ -12,7 +12,7 @@ I used **pandas** to process the data and **tkinter** for the visualization part
 
 **Main Interface**
 
-![ScreenShot](./screenshots/screenshot_3.png)
+![ScreenShot](./screenshots/screenshot_4.png)
 
 ## Requirements
 
@@ -21,5 +21,5 @@ pickle
 
 ## How to use
 ```
-python3 main.py
+python3 __main__.py
 ``` 

@@ -20,7 +20,7 @@ class Kinetics(Frame):
         self.fm_viewer_settings_1.pack(side=LEFT, fill=BOTH, expand=YES)
 
         self.canvas = Canvas(self.fm_viewer_settings_1, bg='white')
-        self.canvas.config(width=wid - 200, height=hei-550)
+        self.canvas.config(width=wid - 200, height=hei-650)
         self.canvas.pack(side=TOP, fill=BOTH, expand=YES)
 
         # Simulation Controller: Slider. The slider is defined elsewhere
@@ -90,15 +90,28 @@ class Kinetics(Frame):
                            "colored_period_4b": 0,
                            "colored_period_5a": 0,
                            "colored_period_5b": 0,
+                           "colored_period_6a": 0,
+                           "colored_period_6b": 0,
+                           "colored_period_7a": 0,
+                           "colored_period_7b": 0,
+                           "colored_period_8a": 0,
+                           "colored_period_8b": 0,
+                           "colored_period_9a": 0,
+                           "colored_period_9b": 0,
+                           "colored_period_10a": 0,
+                           "colored_period_10b": 0,
                            "colored_period_1_color": 'grey40',
                            "colored_period_2_color": 'grey40',
                            "colored_period_3_color": 'grey40',
                            "colored_period_4_color": 'grey40',
-                           "colored_period_5_color": 'grey40'
+                           "colored_period_5_color": 'grey40',
+                           "colored_period_6_color": 'grey40',
+                           "colored_period_7_color": 'grey40',
+                           "colored_period_8_color": 'grey40',
+                           "colored_period_9_color": 'grey40',
+                           "colored_period_10_color": 'grey40',
                            }
-
         self.filename = 'data1.csv'
-
         # Controllers
         # Top-down layout
         self.lb_from_frame = Label(self.fm_settings_2, text='From frame:')
@@ -588,17 +601,23 @@ class Kinetics(Frame):
                                  command=self.set_lifted_10b)
         self.spb_up10b.pack(side=LEFT, expand=YES)
 
-        # colored periods
+        ###################
+        # colored periods #
+        ###################
+
         self.fm_colored_periods = LabelFrame(self.fm_settings_1, text='Colored periods', width=wid - 200)
         self.fm_colored_periods.pack(side=TOP, fill=BOTH, expand=YES)
 
+        self.fm_colored_periods_1_5 = Frame(self.fm_colored_periods)
+        self.fm_colored_periods_1_5.pack(side=TOP, fill=BOTH, expand=YES)
+
         # col1a
-        self.lb_col1a = Label(self.fm_colored_periods, text='Col1A:')
+        self.lb_col1a = Label(self.fm_colored_periods_1_5, text='Col1A:')
         self.lb_col1a.pack(side=LEFT, anchor='w')
 
         self.str_col1a = StringVar()
         self.str_col1a.set(self.parameters['colored_period_1a'])
-        self.spb_col1a = Spinbox(self.fm_colored_periods,
+        self.spb_col1a = Spinbox(self.fm_colored_periods_1_5,
                                  width=5,
                                  from_=1,
                                  to=self.parameters['upper_frame_limit'],
@@ -608,12 +627,12 @@ class Kinetics(Frame):
         self.spb_col1a.pack(side=LEFT, expand=YES)
 
         # col1b
-        self.lb_col1b = Label(self.fm_colored_periods, text='Col1B:')
+        self.lb_col1b = Label(self.fm_colored_periods_1_5, text='Col1B:')
         self.lb_col1b.pack(side=LEFT, anchor='w')
 
         self.str_col1b = StringVar()
         self.str_col1b.set(self.parameters['colored_period_1b'])
-        self.spb_col1b = Spinbox(self.fm_colored_periods,
+        self.spb_col1b = Spinbox(self.fm_colored_periods_1_5,
                                  width=5,
                                  from_=1,
                                  to=self.parameters['upper_frame_limit'],
@@ -623,12 +642,12 @@ class Kinetics(Frame):
         self.spb_col1b.pack(side=LEFT, expand=YES)
 
         # col2a
-        self.lb_col2a = Label(self.fm_colored_periods, text='Col2A:')
+        self.lb_col2a = Label(self.fm_colored_periods_1_5, text='Col2A:')
         self.lb_col2a.pack(side=LEFT, anchor='w')
 
         self.str_col2a = StringVar()
         self.str_col2a.set(self.parameters['colored_period_2a'])
-        self.spb_col2a = Spinbox(self.fm_colored_periods,
+        self.spb_col2a = Spinbox(self.fm_colored_periods_1_5,
                                  width=5,
                                  from_=1,
                                  to=self.parameters['upper_frame_limit'],
@@ -638,12 +657,12 @@ class Kinetics(Frame):
         self.spb_col2a.pack(side=LEFT, expand=YES)
 
         # col2b
-        self.lb_col2b = Label(self.fm_colored_periods, text='Col2B:')
+        self.lb_col2b = Label(self.fm_colored_periods_1_5, text='Col2B:')
         self.lb_col2b.pack(side=LEFT, anchor='w')
 
         self.str_col2b = StringVar()
         self.str_col2b.set(self.parameters['colored_period_2b'])
-        self.spb_col2b = Spinbox(self.fm_colored_periods,
+        self.spb_col2b = Spinbox(self.fm_colored_periods_1_5,
                                  width=5,
                                  from_=1,
                                  to=self.parameters['upper_frame_limit'],
@@ -653,12 +672,12 @@ class Kinetics(Frame):
         self.spb_col2b.pack(side=LEFT, expand=YES)
 
         # col3a
-        self.lb_col3a = Label(self.fm_colored_periods, text='Col3A:')
+        self.lb_col3a = Label(self.fm_colored_periods_1_5, text='Col3A:')
         self.lb_col3a.pack(side=LEFT, anchor='w')
 
         self.str_col3a = StringVar()
         self.str_col3a.set(self.parameters['colored_period_3a'])
-        self.spb_col3a = Spinbox(self.fm_colored_periods,
+        self.spb_col3a = Spinbox(self.fm_colored_periods_1_5,
                                  width=5,
                                  from_=1,
                                  to=self.parameters['upper_frame_limit'],
@@ -668,12 +687,12 @@ class Kinetics(Frame):
         self.spb_col3a.pack(side=LEFT, expand=YES)
 
         # col3b
-        self.lb_col3b = Label(self.fm_colored_periods, text='Col3B:')
+        self.lb_col3b = Label(self.fm_colored_periods_1_5, text='Col3B:')
         self.lb_col3b.pack(side=LEFT, anchor='w')
 
         self.str_col3b = StringVar()
         self.str_col3b.set(self.parameters['colored_period_3b'])
-        self.spb_col3b = Spinbox(self.fm_colored_periods,
+        self.spb_col3b = Spinbox(self.fm_colored_periods_1_5,
                                  width=5,
                                  from_=1,
                                  to=self.parameters['upper_frame_limit'],
@@ -683,12 +702,12 @@ class Kinetics(Frame):
         self.spb_col3b.pack(side=LEFT, expand=YES)
 
         # col4a
-        self.lb_col4a = Label(self.fm_colored_periods, text='Col4A:')
+        self.lb_col4a = Label(self.fm_colored_periods_1_5, text='Col4A:')
         self.lb_col4a.pack(side=LEFT, anchor='w')
 
         self.str_col4a = StringVar()
         self.str_col4a.set(self.parameters['colored_period_4a'])
-        self.spb_col4a = Spinbox(self.fm_colored_periods,
+        self.spb_col4a = Spinbox(self.fm_colored_periods_1_5,
                                  width=5,
                                  from_=1,
                                  to=self.parameters['upper_frame_limit'],
@@ -698,12 +717,12 @@ class Kinetics(Frame):
         self.spb_col4a.pack(side=LEFT, expand=YES)
 
         # col4b
-        self.lb_col4b = Label(self.fm_colored_periods, text='Col4B:')
+        self.lb_col4b = Label(self.fm_colored_periods_1_5, text='Col4B:')
         self.lb_col4b.pack(side=LEFT, anchor='w')
 
         self.str_col4b = StringVar()
         self.str_col4b.set(self.parameters['colored_period_4b'])
-        self.spb_col4b = Spinbox(self.fm_colored_periods,
+        self.spb_col4b = Spinbox(self.fm_colored_periods_1_5,
                                  width=5,
                                  from_=1,
                                  to=self.parameters['upper_frame_limit'],
@@ -713,12 +732,12 @@ class Kinetics(Frame):
         self.spb_col4b.pack(side=LEFT, expand=YES)
 
         # col5a
-        self.lb_col5a = Label(self.fm_colored_periods, text='Col5A:')
+        self.lb_col5a = Label(self.fm_colored_periods_1_5, text='Col5A:')
         self.lb_col5a.pack(side=LEFT, anchor='w')
 
         self.str_col5a = StringVar()
         self.str_col5a.set(self.parameters['colored_period_5a'])
-        self.spb_col5a = Spinbox(self.fm_colored_periods,
+        self.spb_col5a = Spinbox(self.fm_colored_periods_1_5,
                                  width=5,
                                  from_=1,
                                  to=self.parameters['upper_frame_limit'],
@@ -728,12 +747,12 @@ class Kinetics(Frame):
         self.spb_col5a.pack(side=LEFT, expand=YES)
 
         # col5b
-        self.lb_col5b = Label(self.fm_colored_periods, text='Col5B:')
+        self.lb_col5b = Label(self.fm_colored_periods_1_5, text='Col5B:')
         self.lb_col5b.pack(side=LEFT, anchor='w')
 
         self.str_col5b = StringVar()
         self.str_col5b.set(self.parameters['colored_period_5b'])
-        self.spb_col5b = Spinbox(self.fm_colored_periods,
+        self.spb_col5b = Spinbox(self.fm_colored_periods_1_5,
                                  width=5,
                                  from_=1,
                                  to=self.parameters['upper_frame_limit'],
@@ -742,29 +761,206 @@ class Kinetics(Frame):
                                  command=self.set_col_5b)
         self.spb_col5b.pack(side=LEFT, expand=YES)
 
-        # color selection
-        self.fm_color_selection = LabelFrame(self.fm_settings_1, text='Color selection', width=wid - 200)
-        self.fm_color_selection.pack(side=TOP, fill=BOTH, expand=YES)
+        # Line 2
+        self.fm_colored_periods_6_10 = Frame(self.fm_colored_periods)
+        self.fm_colored_periods_6_10.pack(side=TOP, fill=BOTH, expand=YES)
 
-        self.cbox_color1 = ttk.Combobox(self.fm_color_selection, values=colors)
+        # col6a
+        self.lb_col6a = Label(self.fm_colored_periods_6_10, text='Col6A:')
+        self.lb_col6a.pack(side=LEFT, anchor='w')
+
+        self.str_col6a = StringVar()
+        self.str_col6a.set(self.parameters['colored_period_6a'])
+        self.spb_col6a = Spinbox(self.fm_colored_periods_6_10,
+                                 width=5,
+                                 from_=1,
+                                 to=self.parameters['upper_frame_limit'],
+                                 increment=1,
+                                 textvariable=self.str_col6a,
+                                 command=self.set_col_6a)
+        self.spb_col6a.pack(side=LEFT, expand=YES)
+
+        # col6b
+        self.lb_col6b = Label(self.fm_colored_periods_6_10, text='Col6B:')
+        self.lb_col6b.pack(side=LEFT, anchor='w')
+
+        self.str_col6b = StringVar()
+        self.str_col6b.set(self.parameters['colored_period_6b'])
+        self.spb_col6b = Spinbox(self.fm_colored_periods_6_10,
+                                 width=5,
+                                 from_=1,
+                                 to=self.parameters['upper_frame_limit'],
+                                 increment=1,
+                                 textvariable=self.str_col6b,
+                                 command=self.set_col_6b)
+        self.spb_col6b.pack(side=LEFT, expand=YES)
+
+        # col7a
+        self.lb_col7a = Label(self.fm_colored_periods_6_10, text='Col7A:')
+        self.lb_col7a.pack(side=LEFT, anchor='w')
+
+        self.str_col7a = StringVar()
+        self.str_col7a.set(self.parameters['colored_period_7a'])
+        self.spb_col7a = Spinbox(self.fm_colored_periods_6_10,
+                                 width=5,
+                                 from_=1,
+                                 to=self.parameters['upper_frame_limit'],
+                                 increment=1,
+                                 textvariable=self.str_col7a,
+                                 command=self.set_col_7a)
+        self.spb_col7a.pack(side=LEFT, expand=YES)
+
+        # col7b
+        self.lb_col7b = Label(self.fm_colored_periods_6_10, text='Col7B:')
+        self.lb_col7b.pack(side=LEFT, anchor='w')
+
+        self.str_col7b = StringVar()
+        self.str_col7b.set(self.parameters['colored_period_7b'])
+        self.spb_col7b = Spinbox(self.fm_colored_periods_6_10,
+                                 width=5,
+                                 from_=1,
+                                 to=self.parameters['upper_frame_limit'],
+                                 increment=1,
+                                 textvariable=self.str_col7b,
+                                 command=self.set_col_7b)
+        self.spb_col7b.pack(side=LEFT, expand=YES)
+
+        # col8a
+        self.lb_col8a = Label(self.fm_colored_periods_6_10, text='Col8A:')
+        self.lb_col8a.pack(side=LEFT, anchor='w')
+
+        self.str_col8a = StringVar()
+        self.str_col8a.set(self.parameters['colored_period_8a'])
+        self.spb_col8a = Spinbox(self.fm_colored_periods_6_10,
+                                 width=5,
+                                 from_=1,
+                                 to=self.parameters['upper_frame_limit'],
+                                 increment=1,
+                                 textvariable=self.str_col8a,
+                                 command=self.set_col_8a)
+        self.spb_col8a.pack(side=LEFT, expand=YES)
+
+        # col8b
+        self.lb_col8b = Label(self.fm_colored_periods_6_10, text='Col8B:')
+        self.lb_col8b.pack(side=LEFT, anchor='w')
+
+        self.str_col8b = StringVar()
+        self.str_col8b.set(self.parameters['colored_period_8b'])
+        self.spb_col8b = Spinbox(self.fm_colored_periods_6_10,
+                                 width=5,
+                                 from_=1,
+                                 to=self.parameters['upper_frame_limit'],
+                                 increment=1,
+                                 textvariable=self.str_col8b,
+                                 command=self.set_col_8b)
+        self.spb_col8b.pack(side=LEFT, expand=YES)
+
+        # col9a
+        self.lb_col9a = Label(self.fm_colored_periods_6_10, text='Col9A:')
+        self.lb_col9a.pack(side=LEFT, anchor='w')
+
+        self.str_col9a = StringVar()
+        self.str_col9a.set(self.parameters['colored_period_9a'])
+        self.spb_col9a = Spinbox(self.fm_colored_periods_6_10,
+                                 width=5,
+                                 from_=1,
+                                 to=self.parameters['upper_frame_limit'],
+                                 increment=1,
+                                 textvariable=self.str_col9a,
+                                 command=self.set_col_9a)
+        self.spb_col9a.pack(side=LEFT, expand=YES)
+
+        # col9b
+        self.lb_col9b = Label(self.fm_colored_periods_6_10, text='Col9B:')
+        self.lb_col9b.pack(side=LEFT, anchor='w')
+
+        self.str_col9b = StringVar()
+        self.str_col9b.set(self.parameters['colored_period_9b'])
+        self.spb_col9b = Spinbox(self.fm_colored_periods_6_10,
+                                 width=5,
+                                 from_=1,
+                                 to=self.parameters['upper_frame_limit'],
+                                 increment=1,
+                                 textvariable=self.str_col9b,
+                                 command=self.set_col_9b)
+        self.spb_col9b.pack(side=LEFT, expand=YES)
+
+        # col10a
+        self.lb_col10a = Label(self.fm_colored_periods_6_10, text='Col10A:')
+        self.lb_col10a.pack(side=LEFT, anchor='w')
+
+        self.str_col10a = StringVar()
+        self.str_col10a.set(self.parameters['colored_period_5a'])
+        self.spb_col10a = Spinbox(self.fm_colored_periods_6_10,
+                                 width=5,
+                                 from_=1,
+                                 to=self.parameters['upper_frame_limit'],
+                                 increment=1,
+                                 textvariable=self.str_col10a,
+                                 command=self.set_col_10a)
+        self.spb_col10a.pack(side=LEFT, expand=YES)
+
+        # col10b
+        self.lb_col10b = Label(self.fm_colored_periods_6_10, text='Col10B:')
+        self.lb_col10b.pack(side=LEFT, anchor='w')
+
+        self.str_col10b = StringVar()
+        self.str_col10b.set(self.parameters['colored_period_10b'])
+        self.spb_col10b = Spinbox(self.fm_colored_periods_6_10,
+                                 width=5,
+                                 from_=1,
+                                 to=self.parameters['upper_frame_limit'],
+                                 increment=1,
+                                 textvariable=self.str_col10b,
+                                 command=self.set_col_10b)
+        self.spb_col10b.pack(side=LEFT, expand=YES)
+
+        # color selection
+        self.fm_color_selections = LabelFrame(self.fm_settings_1, text='Color selection', width=wid-200)
+        self.fm_color_selections.pack(side=TOP, fill=BOTH, expand=YES)
+        # line 1
+        self.fm_color_selection_1 = Frame(self.fm_color_selections)
+        self.fm_color_selection_1.pack(side=TOP, fill=BOTH, expand=YES)
+
+        self.cbox_color1 = ttk.Combobox(self.fm_color_selection_1, values=colors)
         self.cbox_color1.pack(side=LEFT, expand=YES)
         self.cbox_color1.bind("<<ComboboxSelected>>", self.set_period1_color)
 
-        self.cbox_color2 = ttk.Combobox(self.fm_color_selection, values=colors)
+        self.cbox_color2 = ttk.Combobox(self.fm_color_selection_1, values=colors)
         self.cbox_color2.pack(side=LEFT, expand=YES)
         self.cbox_color2.bind("<<ComboboxSelected>>", self.set_period2_color)
 
-        self.cbox_color3 = ttk.Combobox(self.fm_color_selection, values=colors)
+        self.cbox_color3 = ttk.Combobox(self.fm_color_selection_1, values=colors)
         self.cbox_color3.pack(side=LEFT, expand=YES)
         self.cbox_color3.bind("<<ComboboxSelected>>", self.set_period3_color)
 
-        self.cbox_color4 = ttk.Combobox(self.fm_color_selection, values=colors)
+        self.cbox_color4 = ttk.Combobox(self.fm_color_selection_1, values=colors)
         self.cbox_color4.pack(side=LEFT, expand=YES)
         self.cbox_color4.bind("<<ComboboxSelected>>", self.set_period4_color)
 
-        self.cbox_color5 = ttk.Combobox(self.fm_color_selection, values=colors)
+        self.cbox_color5 = ttk.Combobox(self.fm_color_selection_1, values=colors)
         self.cbox_color5.pack(side=LEFT, expand=YES)
         self.cbox_color5.bind("<<ComboboxSelected>>", self.set_period5_color)
+
+        # line 2
+        self.fm_color_selection_2 = Frame(self.fm_color_selections)
+        self.fm_color_selection_2.pack(side=TOP, fill=BOTH, expand=YES)
+
+        self.cbox_color6 = ttk.Combobox(self.fm_color_selection_2, values=colors)
+        self.cbox_color6.pack(side=LEFT, expand=YES)
+        self.cbox_color6.bind("<<ComboboxSelected>>", self.set_period6_color)
+        self.cbox_color7 = ttk.Combobox(self.fm_color_selection_2, values=colors)
+        self.cbox_color7.pack(side=LEFT, expand=YES)
+        self.cbox_color7.bind("<<ComboboxSelected>>", self.set_period7_color)
+        self.cbox_color8 = ttk.Combobox(self.fm_color_selection_2, values=colors)
+        self.cbox_color8.pack(side=LEFT, expand=YES)
+        self.cbox_color8.bind("<<ComboboxSelected>>", self.set_period8_color)
+        self.cbox_color9 = ttk.Combobox(self.fm_color_selection_2, values=colors)
+        self.cbox_color9.pack(side=LEFT, expand=YES)
+        self.cbox_color9.bind("<<ComboboxSelected>>", self.set_period9_color)
+        self.cbox_color10 = ttk.Combobox(self.fm_color_selection_2, values=colors)
+        self.cbox_color10.pack(side=LEFT, expand=YES)
+        self.cbox_color10.bind("<<ComboboxSelected>>", self.set_period10_color)
 
 
         # displaying frame range
@@ -902,6 +1098,16 @@ class Kinetics(Frame):
                     return self.parameters['colored_period_4_color']
                 elif self.parameters['colored_period_5a'] < i < self.parameters['colored_period_5b']:
                     return self.parameters['colored_period_5_color']
+                elif self.parameters['colored_period_6a'] < i < self.parameters['colored_period_6b']:
+                    return self.parameters['colored_period_6_color']
+                elif self.parameters['colored_period_7a'] < i < self.parameters['colored_period_7b']:
+                    return self.parameters['colored_period_7_color']
+                elif self.parameters['colored_period_8a'] < i < self.parameters['colored_period_8b']:
+                    return self.parameters['colored_period_8_color']
+                elif self.parameters['colored_period_9a'] < i < self.parameters['colored_period_9b']:
+                    return self.parameters['colored_period_9_color']
+                elif self.parameters['colored_period_10a'] < i < self.parameters['colored_period_10b']:
+                    return self.parameters['colored_period_10_color']
                 else:
                     return 'grey40'
 
@@ -937,7 +1143,7 @@ class Kinetics(Frame):
             # Draw the toe end
             if starting <= i <= ending and self.chkvar_draw_toe_end.get() == 1:  # Apply to every time frame
                 if self.last_point != [0, 0]:  # When it's not the first frame
-                    ids += self.draw_toe_end(t)
+                    ids += self.draw_toe_end(t, color)
                     # if_draw_toe_end = 1
                 self.last_point[0] = t.info['Y5']
                 self.last_point[1] = t.info['Z5']
@@ -958,7 +1164,7 @@ class Kinetics(Frame):
 
         # Draw the last part to close the toe end loop
         if self.chkvar_draw_toe_end.get() == 1:
-            self.canvas_ids[self.frame_counter] += self.draw_toe_end(t)
+            self.canvas_ids[self.frame_counter] += self.draw_toe_end(t, color)
 
     def start_from_a_certain_frame(self):
         self.pause()
@@ -1111,6 +1317,36 @@ class Kinetics(Frame):
     def set_col_5b(self):
         self.parameters['colored_period_5b'] = int(self.spb_col5b.get())
 
+    def set_col_6a(self):
+        self.parameters['colored_period_6a'] = int(self.spb_col6a.get())
+
+    def set_col_6b(self):
+        self.parameters['colored_period_6b'] = int(self.spb_col6b.get())
+
+    def set_col_7a(self):
+        self.parameters['colored_period_7a'] = int(self.spb_col7a.get())
+
+    def set_col_7b(self):
+        self.parameters['colored_period_7b'] = int(self.spb_col7b.get())
+
+    def set_col_8a(self):
+        self.parameters['colored_period_8a'] = int(self.spb_col8a.get())
+
+    def set_col_8b(self):
+        self.parameters['colored_period_8b'] = int(self.spb_col8b.get())
+
+    def set_col_9a(self):
+        self.parameters['colored_period_9a'] = int(self.spb_col9a.get())
+
+    def set_col_9b(self):
+        self.parameters['colored_period_9b'] = int(self.spb_col9b.get())
+
+    def set_col_10a(self):
+        self.parameters['colored_period_10a'] = int(self.spb_col10a.get())
+
+    def set_col_10b(self):
+        self.parameters['colored_period_10b'] = int(self.spb_col10b.get())
+
     def set_period1_color(self, *evt):
         self.parameters['colored_period_1_color'] = self.cbox_color1.get()
 
@@ -1125,6 +1361,21 @@ class Kinetics(Frame):
 
     def set_period5_color(self, *evt):
         self.parameters['colored_period_5_color'] = self.cbox_color5.get()
+
+    def set_period6_color(self, *evt):
+        self.parameters['colored_period_6_color'] = self.cbox_color6.get()
+
+    def set_period7_color(self, *evt):
+        self.parameters['colored_period_7_color'] = self.cbox_color7.get()
+
+    def set_period8_color(self, *evt):
+        self.parameters['colored_period_8_color'] = self.cbox_color8.get()
+
+    def set_period9_color(self, *evt):
+        self.parameters['colored_period_9_color'] = self.cbox_color9.get()
+
+    def set_period10_color(self, *evt):
+        self.parameters['colored_period_10_color'] = self.cbox_color10.get()
 
     def set_v_arrow_factor(self):
         self.parameters['velocity_normalization_factor'] = float(self.spb_velocity_denominator.get())
@@ -1201,6 +1452,16 @@ class Kinetics(Frame):
         self.set_col_4b()
         self.set_col_5a()
         self.set_col_5b()
+        self.set_col_6a()
+        self.set_col_6b()
+        self.set_col_7a()
+        self.set_col_7b()
+        self.set_col_8a()
+        self.set_col_8b()
+        self.set_col_9a()
+        self.set_col_9b()
+        self.set_col_10a()
+        self.set_col_10b()
 
     def start_over(self):
         self.paused = False  # clear the paused flag
@@ -1324,7 +1585,7 @@ class Kinetics(Frame):
         self.canvas.update()
         return ids
 
-    def draw_toe_end(self, t):
+    def draw_toe_end(self, t, color):
         # create a list to collect item ids
         ids = list()
 
@@ -1332,23 +1593,23 @@ class Kinetics(Frame):
         # in a frame range, set color to blue
 
         # if self.parameters['lifted_period_1b'] > self.frame_counter > self.parameters['lifted_period_1a']:
-        if self.frame_counter in self.lifted_frames:
-            c = colors[5]
-
-        else:  # not moving lifted, set color to grey
-            c = 'grey40'
+        # if self.frame_counter in self.lifted_frames:
+        #     c = colors[5]
+        #
+        # else:  # not moving lifted, set color to grey
+        #     c = 'grey40'
         if self.chkvar_horizontal_flip.get() == 1:  # Horizontal flip
             ids.append(self.canvas.create_line(
                 self.last_point[0]+self.parameters['offset_x'],
                 self.last_point[1]+self.parameters['offset_y'],
                 t.info['Y5']+self.parameters['offset_x'],
-                t.info['Z5']+self.parameters['offset_y'], fill=c, width=2))
+                t.info['Z5']+self.parameters['offset_y'], fill=color, width=2))
         else:
             ids.append(self.canvas.create_line(
                 self.flip_x(self.last_point[0] + self.parameters['offset_x']),
                 self.last_point[1] + self.parameters['offset_y'],
                 self.flip_x(t.info['Y5'] + self.parameters['offset_x']),
-                t.info['Z5'] + self.parameters['offset_y'], fill=c, width=2))
+                t.info['Z5'] + self.parameters['offset_y'], fill=color, width=2))
         self.canvas.update()
         return ids
 
@@ -1482,7 +1743,7 @@ class TimeFrame:
 if __name__ == '__main__':
     root = Tk()
     wid = 1400
-    hei = 900
+    hei = 950
     root.wm_title("Kinetics")
     root.geometry(str(wid) + "x" + str(hei) + "+200+50")
     app = Kinetics(root)
